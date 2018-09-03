@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base
+from database_setup import Base, Category, CatalogItem
 
 app = Flask(__name__)
 
@@ -15,7 +15,8 @@ session = DBSession()
 @app.route('/')
 @app.route('/home')
 def showHome():
-    return "Welcome to the Home Page!"
+    categories = session.query(Category).order_by(asc(Category.name))
+    return render_template("homepage.html", categories=categories)
 
 @app.route('/login')
 def loginPage():
@@ -33,9 +34,11 @@ def editCategory():
 def deleteCategory():
     return "delete"
 
-@app.route('/<string:category_name>')
-def showCategory():
-    return "show category"
+@app.route('/<int:category_id>')
+def showCategory(category_id):
+    category = session.query(Category).filter_by(id=category_id).one()
+    items = session.query(CatalogItem).filter_by(category_id=category.id).all()
+    return render_template("categorypage.html", category=category, items=items)
 
 @app.route('/<string:category_name>/<string:item_name>')
 def showItem():
