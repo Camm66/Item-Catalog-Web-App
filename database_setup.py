@@ -29,7 +29,7 @@ class CatalogItem(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(80), nullable=False)
     description = Column(String(250))
-    category_id = Column(Integer, ForeignKey('restaurant.id'))
+    category_id = Column(Integer, ForeignKey('catalog.id'))
     category = relationship(Category)
 
     @property
