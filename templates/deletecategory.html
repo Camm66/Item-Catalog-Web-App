@@ -1,17 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title></title>
-  </head>
-  <body>
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
     <h1>Delete {{category.name}}</h1>
     <div>
       	<form action="#" method = "post">
           <div class="form-group">
             <button type="submit" id="submit" type="submit">
-            <span class="glyphicon glyphicon-glass" aria-hidden="true"></span>Delete</button>
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>Delete</button>
           </div>
         </form>
     </div>
-  </body>
-</html>
+{% endblock %}

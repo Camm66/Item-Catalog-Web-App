@@ -79,7 +79,6 @@ def addItem(category_id):
 
 @app.route('/item/<int:category_id>/<int:item_id>/edit', methods=['GET', 'POST'])
 def editItem(category_id, item_id):
-    #category = session.query(Category).filter_by(id=category_id).one()
     item = session.query(CatalogItem).filter_by(id=item_id).one()
     if request.method == 'POST':
         if request.form['name']:

@@ -1,0 +1,17 @@
+
+
+h2 {
+	font-family: "Helvetica Neue Light", Roboto, Helvetica, Arial, sans-serif;
+	font-size: 70px;
+	color: #42C3C9;
+	line-height: 29px;
+}
+
+p{
+	color: red;
+}
+
+.item-list {
+ background-color: #F0F0F0;
+ padding: 20px;
+ }

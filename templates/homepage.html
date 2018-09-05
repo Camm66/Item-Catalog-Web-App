@@ -1,8 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-  </head>
-  <body>
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
     <div>
       <h1>Categories<h1>
       {% for category in categories %}
@@ -10,5 +8,4 @@
         {{category.name}}</a>
       {% endfor %}
     </div>
-  </body>
-</html>
+{% endblock %}
