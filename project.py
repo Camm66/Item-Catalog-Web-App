@@ -22,19 +22,34 @@ def showHome():
 def loginPage():
     return "Welcome to the Login Page"
 
-@app.route('/addCategory')
+@app.route('/addCategory', methods=['GET', 'POST'])
 def addCategory():
-    return "add"
+    if request.method == 'POST':
+        if request.form['name']:
+            newCategory = Category(name=request.form['name'])
+            session.add(newCategory)
+            session.commit()
+        return redirect(url_for("showHome"))
+    else:
+        return render_template("addcategory.html")
 
-@app.route('/editCategory')
-def editCategory():
-    return "edit"
+@app.route('/category/<int:category_id>/edit', methods=['GET', 'POST'])
+def editCategory(category_id):
+    editedCategory = session.query(Category).filter_by(id=category_id).one()
+    if request.method == 'POST':
+        if request.form['name'] != editedCategory.name:
+            editedCategory.name = request.form['name']
+            session.add(editedCategory)
+            session.commit()
+        return redirect(url_for("showHome"))
+    else:
+        return render_template("editcategory.html", category=editedCategory)
 
 @app.route('/deletecategory')
 def deleteCategory():
     return "delete"
 
-@app.route('/<int:category_id>')
+@app.route('/category/<int:category_id>')
 def showCategory(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
     items = session.query(CatalogItem).filter_by(category_id=category.id).all()
