@@ -103,8 +103,6 @@ def deleteItem(category_id, item_id):
         return render_template('deleteitem.html', item=item)
 
 
-
-
 if __name__ == '__main__':
     app.secret_key = 'secretkey'
     app.debug = True
