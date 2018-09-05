@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title></title>
-  </head>
-  <body>
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
     <div>
       <h1>{{item.name}}</h1>
       <a href="{{url_for('editItem', category_id=item.category_id, item_id=item.id)}}">Edit</a>
@@ -12,5 +9,4 @@
     <div>
       <p>{{item.description}}</p>
     </div>
-  </body>
-</html>
+{% endblock %}

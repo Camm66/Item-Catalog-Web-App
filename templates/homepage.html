@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title></title>
-  </head>
-  <body>
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
     <div>
       <h1>Categories</h1>
         <div>
@@ -15,5 +12,4 @@
       </br>
       {% endfor %}
     </div>
-  </body>
-</html>
+{% endblock %}
