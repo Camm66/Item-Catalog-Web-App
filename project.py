@@ -60,13 +60,22 @@ def showCategory(category_id):
     items = session.query(CatalogItem).filter_by(category_id=category.id).all()
     return render_template("categorypage.html", category=category, items=items)
 
-@app.route('/<string:category_name>/<string:item_name>')
-def showItem():
-    return "show item"
+@app.route('/item/<int:item_id>')
+def showItem(item_id):
+    item = session.query(CatalogItem).filter_by(id=item_id).one()
+    return render_template('itempage.html', item=item)
 
-@app.route('/<string:category_name>/<string:item_name>/addItem')
-def addItem():
-    return "add item"
+@app.route('/item/<int:category_id>/addItem', methods=['GET', 'POST'])
+def addItem(category_id):
+    category = session.query(Category).filter_by(id=category_id).one()
+    if request.method =='POST':
+        if request.form['name']:
+            newItem = CatalogItem(name=request.form['name'],
+                description=request.form['description'], category_id=category.id)
+            session.add(newItem)
+            session.commit()
+        return redirect(url_for('showCategory', category_id=category.id))
+    return render_template('additem.html')
 
 @app.route('/<string:category_name>/<string:item_name>/editItem')
 def editItem():
