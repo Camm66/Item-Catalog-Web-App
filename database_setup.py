@@ -4,6 +4,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
+from sqlalchemy_imageattach.entity import Image, image_attachment
 
 Base = declarative_base()
 
@@ -31,6 +32,7 @@ class CatalogItem(Base):
     description = Column(String(250))
     category_id = Column(Integer, ForeignKey('catalog.id'))
     category = relationship(Category)
+    picture = image_attachment('ItemPicture')
 
     @property
     def serialize(self):
@@ -40,6 +42,14 @@ class CatalogItem(Base):
             'description': self.description,
             'id': self.id,
         }
+
+class ItemPicture(Base, Image):
+    __tablename__ = 'item_picture'
+
+    item_id = Column(Integer, ForeignKey('catalog_item.id'), primary_key=True)
+    item = relationship('CatalogItem')
+
+
 
 
 engine = create_engine('sqlite:///catalog.db')
