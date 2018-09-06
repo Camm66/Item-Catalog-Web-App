@@ -41,12 +41,19 @@ def showHome():
 def loginPage():
     return "Welcome to the Login Page"
 
+@app.route('/category/<int:category_id>')
+def showCategory(category_id):
+    category = session.query(Category).filter_by(id=category_id).one()
+    items = session.query(CatalogItem).filter_by(category_id=category.id).all()
+    return render_template("categorypage.html", category=category, items=items)
+
 @app.route('/addCategory', methods=['GET', 'POST'])
 def addCategory():
     if request.method == 'POST':
         if request.form['name']:
             newCategory = Category(name=request.form['name'])
             session.add(newCategory)
+            flash('New Category %s Successfully Created' % newCategory.name)
             session.commit()
         return redirect(url_for("showHome"))
     else:
@@ -59,6 +66,7 @@ def editCategory(category_id):
         if request.form['name'] != editedCategory.name:
             editedCategory.name = request.form['name']
             session.add(editedCategory)
+            flash('Category %s Successfully Updated' % editedCategory.name)
             session.commit()
         return redirect(url_for("showHome"))
     else:
@@ -69,15 +77,10 @@ def deleteCategory(category_id):
     deletedCategory = session.query(Category).filter_by(id=category_id).one()
     if request.method == 'POST':
         session.delete(deletedCategory)
+        flash('Category %s Successfully deleted' % deletedCategory.name)
         session.commit()
         return redirect(url_for('showHome'))
     return render_template('deletecategory.html', category=deletedCategory)
-
-@app.route('/category/<int:category_id>')
-def showCategory(category_id):
-    category = session.query(Category).filter_by(id=category_id).one()
-    items = session.query(CatalogItem).filter_by(category_id=category.id).all()
-    return render_template("categorypage.html", category=category, items=items)
 
 @app.route('/item/<int:item_id>')
 def showItem(item_id):
@@ -92,6 +95,7 @@ def addItem(category_id):
             newItem = CatalogItem(name=request.form['name'],
                 description=request.form['description'], category_id=category.id)
             session.add(newItem)
+            flash('Item %s Successfully Created' % newItem.name)
             session.commit()
         return redirect(url_for('showCategory', category_id=category.id))
     return render_template('additem.html')
@@ -105,6 +109,7 @@ def editItem(category_id, item_id):
         if request.form['description']:
             item.description = request.form['description']
         session.add(item)
+        flash('Item %s Successfully Updated' % item.name)
         session.commit()
         return redirect(url_for('showCategory', category_id=category_id))
     else:
@@ -115,6 +120,7 @@ def deleteItem(category_id, item_id):
     item = session.query(CatalogItem).filter_by(id=item_id).one()
     if request.method == 'POST':
         session.delete(item)
+        flash('Item %s Successfully Deleted' % item.name)
         session.commit()
         return redirect(url_for('showCategory', category_id=category_id))
     else:

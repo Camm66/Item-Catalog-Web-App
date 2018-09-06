@@ -1,23 +1,38 @@
+* {
+	font-family: "Helvetica Neue Bold", Roboto, Helvetica, Arial, sans-serif;
+	font-weight: 700;
+}
+
 h1 {
 	font-family: "Helvetica Neue Light", Roboto, Helvetica, Arial, sans-serif;
 	font-size: 50px;
-	color: #51453B;
+	color: #000000;
 	line-height: 60px;
 	font-weight: 300;
 }
 
 h2 {
-	font-family: "Helvetica Neue Light", Roboto, Helvetica, Arial, sans-serif;
-	font-size: 70px;
-	color: #42C3C9;
+	font-size: 24px;
+	color: #000000;
 	line-height: 29px;
 }
 
-p{
-	color: red;
+h3 {
+	font-size: 18px;
+	color: #000000;
+	line-height: 23px;
 }
 
-.item-list {
- background-color: #F0F0F0;
- padding: 20px;
- }
+p {
+ font-family: "Helvetica Neue", Roboto, Helvetica, Arial, sans-serif;
+ font-size: 16px;
+ color: #7B7573;
+ line-height: 24px;
+ font-weight: 400;
+}
+
+a {
+ font-size: 14px;
+ color: #0093B9;
+ line-height: 17px;
+}

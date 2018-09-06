@@ -2,7 +2,19 @@
 {% block content %}
 {% include "header.html" %}
     <div>
-      <h1>{{category.name}}</h1>
+      <h2>{{category.name}}</h2>
+      <div class = 'flash'>
+      		      {% with messages = get_flashed_messages() %}
+            {% if messages %}
+
+              <ul>
+              {% for message in messages %}
+                  <li> <strong> {{ message }} </strong> </li>
+              {% endfor %}
+              </ul>
+              {% endif %}
+          {% endwith %}
+      </div>
       <a href="{{url_for('editCategory', category_id=category.id)}}">Edit</a>
       <a href="{{url_for('deleteCategory', category_id=category.id)}}">Delete</a>
       {% for item in items %}
