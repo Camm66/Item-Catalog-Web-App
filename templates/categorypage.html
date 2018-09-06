@@ -15,6 +15,7 @@
               {% endif %}
           {% endwith %}
       </div>
+      <a href="{{url_for('addItem', category_id=category.id)}}">Add Item</a>
       <a href="{{url_for('editCategory', category_id=category.id)}}">Edit</a>
       <a href="{{url_for('deleteCategory', category_id=category.id)}}">Delete</a>
       {% for item in items %}

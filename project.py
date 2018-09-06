@@ -68,7 +68,7 @@ def editCategory(category_id):
             session.add(editedCategory)
             flash('Category %s Successfully Updated' % editedCategory.name)
             session.commit()
-        return redirect(url_for("showHome"))
+        return redirect(url_for("showCategory", category_id=category_id))
     else:
         return render_template("editcategory.html", category=editedCategory)
 
@@ -98,7 +98,7 @@ def addItem(category_id):
             flash('Item %s Successfully Created' % newItem.name)
             session.commit()
         return redirect(url_for('showCategory', category_id=category.id))
-    return render_template('additem.html')
+    return render_template('additem.html', category_id=category_id)
 
 @app.route('/item/<int:category_id>/<int:item_id>/edit', methods=['GET', 'POST'])
 def editItem(category_id, item_id):

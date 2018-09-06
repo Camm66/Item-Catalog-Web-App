@@ -1,12 +1,14 @@
 {% extends "main.html" %}
 {% block content %}
 {% include "header.html" %}
-    <h1>Delete {{item.name}}?</h1>
+    <h2>Delete {{item.name}}?</h2>
     <div>
       	<form action="#" method = "post">
           <div class="form-group">
             <button id="submit" type="submit">
-            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>Delete</button>
+            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>Delete</button>
+            <button type="reset" onclick="window.location='{{url_for('showItem', item_id=item.id)}}';return false;">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>Cancel</button>
           </div>
         </form>
     </div>
