@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify, f
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Category, CatalogItem
+import json
 
 app = Flask(__name__)
 
@@ -11,6 +12,24 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
+
+#JSON APIs to view Catalog Information
+@app.route('/JSON')
+def categoriesJSON():
+    Categories = session.query(Category).all()
+    return jsonify(Categories=[category.serialize for category in Categories])
+
+@app.route('/category/<int:category_id>/JSON')
+def categoryJSON(category_id):
+    Category_Items = session.query(CatalogItem).filter_by(category_id=category_id).all()
+    return jsonify(Category_Items=[item.serialize for item in Category_Items])
+
+@app.route('/item/<int:item_id>/JSON')
+def itemJSON(item_id):
+    Item = session.query(CatalogItem).filter_by(id=item_id).one()
+    return jsonify(Item=[Item.serialize])
+
+#Method calls for each page:
 
 @app.route('/')
 @app.route('/home')
