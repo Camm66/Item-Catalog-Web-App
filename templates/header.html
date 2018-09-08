@@ -11,5 +11,14 @@
           <span class="glyphicon glyphicon-home"></span> Home
       </a>
     </button>
+
+    <div class="col-md-6 text-right">
+        {%if 'username' not in login_session %}
+        <a href="{{url_for('showLogin')}}">Click Here to Login </a>
+        {% else %}
+        <a href="{{url_for('disconnect')}}">Logout </a>
+        {% endif %}
+
+    </div>
   </body>
 </html>
