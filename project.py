@@ -5,6 +5,7 @@ from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Category, CatalogItem
 import json
+import os
 
 app = Flask(__name__)
 
@@ -49,11 +50,14 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def upload_file(request):
-        file = request.files['file']
+        file = request.files['pic']
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return True
+            return filename
+
+def delete_image(filename):
+    return os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
 @app.route('/images/<string:filename>')
 def get_file(filename):
@@ -94,7 +98,7 @@ def loginPage():
 @app.route('/category/<int:category_id>')
 def showCategory(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
-    items = session.query(CatalogItem).filter_by(category_id=category.id).all()
+    items = session.query(CatalogItem).filter_by(category_id=category_id).all()
     return render_template("categorypage.html", category=category, items=items)
 
 @app.route('/addCategory', methods=['GET', 'POST'])
@@ -142,11 +146,9 @@ def addItem(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
     if request.method =='POST':
         if request.form['name']:
+            filename = upload_file(request)
             newItem = CatalogItem(name=request.form['name'],
-                description=request.form['description'], category_id=category.id)
-            if request.form['pic']:
-                if upload_file(request):
-                    newItem.picture = request.form['pic']
+                description=request.form['description'], category_id=category.id, picture=filename)
             session.add(newItem)
             flash('Item %s Successfully Created' % newItem.name)
             session.commit()
@@ -171,10 +173,9 @@ def editItem(category_id, item_id):
 @app.route('/item/<int:category_id>/<int:item_id>/delete', methods=['GET', 'POST'])
 def deleteItem(category_id, item_id):
     item = session.query(CatalogItem).filter_by(id=item_id).one()
-    image = session.query(ItemPicture).filter_by(item_id=item_id).one()
     if request.method == 'POST':
         session.delete(item)
-        session.delete(image)
+        delete_image(item.picture)
         flash('Item %s Successfully Deleted' % item.name)
         session.commit()
         return redirect(url_for('showCategory', category_id=category_id))
