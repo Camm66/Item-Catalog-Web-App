@@ -24,7 +24,13 @@ session.add(category1)
 session.commit()
 
 catalogItem1 = CatalogItem(name="Calculus 1",
-    description="A math course about Calculus.", category=category1)
+    description="A math course about Calculus.", category=category1, picture="testImg1.jpg")
 
 session.add(catalogItem1)
+session.commit()
+
+catalogItem2 = CatalogItem(name="Calculus 2",
+    description="A math course about Calculus, but tougher.", category=category1, picture="testImg2.jpg")
+
+session.add(catalogItem2)
 session.commit()

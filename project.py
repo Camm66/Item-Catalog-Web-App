@@ -1,10 +1,14 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
+from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, send_from_directory
+from flask_wtf.csrf import CSRFProtect
+from werkzeug.utils import secure_filename
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Category, CatalogItem
 import json
 
 app = Flask(__name__)
+
+#Initialize the database
 
 engine = create_engine('sqlite:///catalog.db')
 Base.metadata.bind = engine
@@ -13,19 +17,50 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 #Added CSRF protection
+
+csrf = CSRFProtect()
+csrf.init_app(app)
+
 @app.before_request
-def csrf_protect():
-    if request.method == "POST":
-        token = session.pop('_csrf_token', None)
-        if not token or token != request.form.get('_csrf_token'):
-            abort(403)
+def csrf_protect():#
+#    if request.method == "POST":
+#        token = session.pop('csrf_token')
+#        if not token or token != request.form.get('csrf_token'):
+#            abort(400)
+    return
 
 def generate_csrf_token():
-    if '_csrf_token' not in session:
-        session['_csrf_token'] = some_random_string()
-    return session['_csrf_token']
+    if 'csrf_token' not in session:
+        session['csrf_token'] = some_random_string()
+    return session['csrf_token']
 
 app.jinja_env.globals['csrf_token'] = generate_csrf_token
+
+
+
+#Image handling
+UPLOAD_FOLDER = '/vagrant/ItemCatalog/images'
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def upload_file(request):
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return True
+
+@app.route('/images/<string:filename>')
+def get_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'],
+                               filename)
+
+
 
 #JSON APIs to view Catalog Information
 @app.route('/JSON')
@@ -42,6 +77,7 @@ def categoryJSON(category_id):
 def itemJSON(item_id):
     Item = session.query(CatalogItem).filter_by(id=item_id).one()
     return jsonify(Item=[Item.serialize])
+
 
 #Method calls for each page:
 
@@ -108,6 +144,9 @@ def addItem(category_id):
         if request.form['name']:
             newItem = CatalogItem(name=request.form['name'],
                 description=request.form['description'], category_id=category.id)
+            if request.form['pic']:
+                if upload_file(request):
+                    newItem.picture = request.form['pic']
             session.add(newItem)
             flash('Item %s Successfully Created' % newItem.name)
             session.commit()
@@ -132,8 +171,10 @@ def editItem(category_id, item_id):
 @app.route('/item/<int:category_id>/<int:item_id>/delete', methods=['GET', 'POST'])
 def deleteItem(category_id, item_id):
     item = session.query(CatalogItem).filter_by(id=item_id).one()
+    image = session.query(ItemPicture).filter_by(item_id=item_id).one()
     if request.method == 'POST':
         session.delete(item)
+        session.delete(image)
         flash('Item %s Successfully Deleted' % item.name)
         session.commit()
         return redirect(url_for('showCategory', category_id=category_id))
