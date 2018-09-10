@@ -4,8 +4,7 @@ from flask import make_response
 from flask_wtf.csrf import CSRFProtect
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Category, CatalogItem
-from werkzeug.utils import secure_filename
+from database_setup import Base, Category, CatalogItem, User
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 import json
@@ -17,7 +16,6 @@ import requests
 
 
 app = Flask(__name__)
-
 
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
@@ -33,8 +31,8 @@ session = DBSession()
 
 #Added CSRF protection
 
-csrf = CSRFProtect()
-csrf.init_app(app)
+#csrf = CSRFProtect()
+#csrf.init_app(app)
 
 @app.before_request
 def csrf_protect():#
@@ -96,14 +94,16 @@ def itemJSON(item_id):
 
 
 
-
-
-
-
-
-
-
 #Authentication
+@app.route('/login')
+def showLogin():
+    # Create anti-forgery state token
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits)
+                    for x in range(32))
+    login_session['state'] = state
+    # return "The current session state is %s" % login_session['state']
+    return render_template('login.html', STATE=state)
+
 #Google auth API
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
@@ -114,13 +114,15 @@ def gconnect():
         return response
     # Obtain authorization code
     code = request.data
+
     try:
         # Upgrade the authorization code into a credentials object
         oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
-        response = make_response(json.dumps('Failed to upgrade the authorization code.'), 401)
+        response = make_response(
+            json.dumps('Failed to upgrade the authorization code.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -194,6 +196,27 @@ def gconnect():
     print ("done!")
     return output
 
+@app.route('/gdisconnect')
+def gdisconnect():
+    # Only disconnect a connected user.
+    access_token = login_session.get('access_token')
+    if access_token is None:
+        response = make_response(
+            json.dumps('Current user not connected.'), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
+    h = httplib2.Http()
+    result = h.request(url, 'GET')[0]
+    if result['status'] == '200':
+        response = make_response(json.dumps('Successfully disconnected.'), 200)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    else:
+        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+        response.headers['Content-Type'] = 'application/json'
+        return response
+
     # User Helper Functions
 
 def createUser(login_session):
@@ -218,34 +241,6 @@ def getUserID(email):
         return None
 
 
-@app.route('/gdisconnect')
-def gdisconnect():
-    # Only disconnect a connected user.
-    access_token = login_session.get('access_token')
-    if access_token is None:
-        response = make_response(
-            json.dumps('Current user not connected.'), 401)
-        response.headers['Content-Type'] = 'application/json'
-        return response
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
-    h = httplib2.Http()
-    result = h.request(url, 'GET')[0]
-    if result['status'] == '200':
-        response = make_response(json.dumps('Successfully disconnected.'), 200)
-        response.headers['Content-Type'] = 'application/json'
-        return response
-    else:
-        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
-        response.headers['Content-Type'] = 'application/json'
-        return response
-
-
-
-
-
-
-
-
 #Method calls for each page:
 
 @app.route('/')
@@ -253,15 +248,6 @@ def gdisconnect():
 def showHome():
     categories = session.query(Category).order_by(asc(Category.name))
     return render_template("homepage.html", categories=categories)
-
-# Create anti-forgery state token
-@app.route('/login')
-def showLogin():
-    state = ''.join(random.choice(string.ascii_uppercase + string.digits)
-                    for x in range(32))
-    login_session['state'] = state
-    # return "The current session state is %s" % login_session['state']
-    return render_template('login.html', STATE=state)
 
 @app.route('/category/<int:category_id>')
 def showCategory(category_id):
