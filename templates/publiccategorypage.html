@@ -2,7 +2,7 @@
 {% block content %}
 {% include "header.html" %}
     <div>
-      <h2>Categories</h2>
+      <h2>{{category.name}}</h2>
       <div class = 'flash'>
       		      {% with messages = get_flashed_messages() %}
             {% if messages %}
@@ -14,15 +14,10 @@
               </ul>
               {% endif %}
           {% endwith %}
-                  <a href="{{url_for('addCategory')}}"> New Category </a>
       </div>
-      <ul>
-      {% for category in categories %}
-        <li>
-          <a href = "{{url_for('showCategory', category_id = category.id)}}">
-                {{category.name}}</a>
-        </li>
+      {% for item in items %}
+    </br>
+        <a href="{{url_for('showItem', item_id=item.id)}}">{{item.name}}</a>
       {% endfor %}
-      </ul>
     </div>
 {% endblock %}

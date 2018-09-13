@@ -273,12 +273,16 @@ def disconnect():
 @app.route('/home')
 def showHome():
     categories = session.query(Category).order_by(asc(Category.name))
+    if 'username' not in login_session:
+        return render_template('publichomepage.html', categories=categories, login_session=login_session)
     return render_template("homepage.html", categories=categories, login_session=login_session)
 
 @app.route('/category/<int:category_id>')
 def showCategory(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
     items = session.query(CatalogItem).filter_by(category_id=category_id).all()
+    if 'username' not in login_session:
+        return render_template('publiccategorypage.html', category=category, items=items, login_session=login_session)
     return render_template("categorypage.html", category=category, items=items, login_session=login_session)
 
 @app.route('/addCategory', methods=['GET', 'POST'])
@@ -319,7 +323,9 @@ def deleteCategory(category_id):
 @app.route('/item/<int:item_id>')
 def showItem(item_id):
     item = session.query(CatalogItem).filter_by(id=item_id).one()
-    return render_template('itempage.html', item=item)
+    if 'username' not in login_session:
+        return render_template('publicitempage.html', item=item, login_session=login_session)
+    return render_template('itempage.html', item=item, login_session=login_session)
 
 @app.route('/item/<int:category_id>/addItem', methods=['GET', 'POST'])
 def addItem(category_id):
