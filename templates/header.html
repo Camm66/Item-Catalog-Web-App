@@ -13,10 +13,10 @@
     </button>
 
     <div class="col-md-6 text-right">
-        {%if 'username' not in login_session %}
-        <a href="{{url_for('showLogin')}}">Click Here to Login </a>
+        {% if 'username' in login_session %}
+        <a href="{{url_for('gdisconnect')}}">Logout </a>
         {% else %}
-        <a href="{{url_for('disconnect')}}">Logout </a>
+        <a href="{{url_for('showLogin')}}">Click Here to Login </a>
         {% endif %}
 
     </div>

@@ -104,7 +104,6 @@ def showLogin():
     # return "The current session state is %s" % login_session['state']
     return render_template('login.html', STATE=state)
 
-#Google auth API
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
     # Validate state token
@@ -150,7 +149,7 @@ def gconnect():
     if result['issued_to'] != CLIENT_ID:
         response = make_response(
             json.dumps("Token's client ID does not match app's."), 401)
-        print ("Token's client ID does not match app's.")
+        print "Token's client ID does not match app's."
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -193,35 +192,15 @@ def gconnect():
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
     flash("you are now logged in as %s" % login_session['username'])
-    print ("done!")
+    print "done!"
     return output
 
-@app.route('/gdisconnect')
-def gdisconnect():
-    # Only disconnect a connected user.
-    access_token = login_session.get('access_token')
-    if access_token is None:
-        response = make_response(
-            json.dumps('Current user not connected.'), 401)
-        response.headers['Content-Type'] = 'application/json'
-        return response
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
-    h = httplib2.Http()
-    result = h.request(url, 'GET')[0]
-    if result['status'] == '200':
-        response = make_response(json.dumps('Successfully disconnected.'), 200)
-        response.headers['Content-Type'] = 'application/json'
-        return response
-    else:
-        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
-        response.headers['Content-Type'] = 'application/json'
-        return response
+# User Helper Functions
 
-    # User Helper Functions
 
 def createUser(login_session):
     newUser = User(name=login_session['username'], email=login_session[
-                       'email'], picture=login_session['picture'])
+                   'email'], picture=login_session['picture'])
     session.add(newUser)
     session.commit()
     user = session.query(User).filter_by(email=login_session['email']).one()
@@ -240,6 +219,53 @@ def getUserID(email):
     except:
         return None
 
+# DISCONNECT - Revoke a current user's token and reset their login_session
+
+
+@app.route('/gdisconnect')
+def gdisconnect():
+    # Only disconnect a connected user.
+    access_token = login_session.get('access_token')
+    if access_token is None:
+        response = make_response(
+            json.dumps('Current user not connected.'), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
+    h = httplib2.Http()
+    result = h.request(url, 'GET')[0]
+    if result['status'] == '200':
+        response = make_response(json.dumps('Successfully disconnected.'), 200)
+        response.headers['Content-Type'] = 'application/json'
+        return redirect(url_for('disconnect'))
+    else:
+        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+        response.headers['Content-Type'] = 'application/json'
+        return response
+
+
+
+
+
+# Disconnect based on provider
+@app.route('/disconnect')
+def disconnect():
+    if 'provider' in login_session:
+        if login_session['provider'] == 'google':
+            gdisconnect()
+            del login_session['gplus_id']
+            del login_session['access_token']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+        del login_session['user_id']
+        del login_session['provider']
+        flash("You have successfully been logged out.")
+        return redirect(url_for('showHome'))
+    else:
+        flash("You were not logged in")
+        return redirect(url_for('showHome'))
+
 
 #Method calls for each page:
 
@@ -247,13 +273,13 @@ def getUserID(email):
 @app.route('/home')
 def showHome():
     categories = session.query(Category).order_by(asc(Category.name))
-    return render_template("homepage.html", categories=categories)
+    return render_template("homepage.html", categories=categories, login_session=login_session)
 
 @app.route('/category/<int:category_id>')
 def showCategory(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
     items = session.query(CatalogItem).filter_by(category_id=category_id).all()
-    return render_template("categorypage.html", category=category, items=items)
+    return render_template("categorypage.html", category=category, items=items, login_session=login_session)
 
 @app.route('/addCategory', methods=['GET', 'POST'])
 def addCategory():
@@ -278,7 +304,7 @@ def editCategory(category_id):
             session.commit()
         return redirect(url_for("showCategory", category_id=category_id))
     else:
-        return render_template("editcategory.html", category=editedCategory)
+        return render_template("editcategory.html", category=editedCategory, login_session=login_session)
 
 @app.route('/category/<int:category_id>/delete', methods=['GET', 'POST'])
 def deleteCategory(category_id):
@@ -288,7 +314,7 @@ def deleteCategory(category_id):
         flash('Category %s Successfully deleted' % deletedCategory.name)
         session.commit()
         return redirect(url_for('showHome'))
-    return render_template('deletecategory.html', category=deletedCategory)
+    return render_template('deletecategory.html', category=deletedCategory, login_session=login_session)
 
 @app.route('/item/<int:item_id>')
 def showItem(item_id):
@@ -307,7 +333,7 @@ def addItem(category_id):
             flash('Item %s Successfully Created' % newItem.name)
             session.commit()
         return redirect(url_for('showCategory', category_id=category.id))
-    return render_template('additem.html', category_id=category_id)
+    return render_template('additem.html', category_id=category_id, login_session=login_session)
 
 @app.route('/item/<int:category_id>/<int:item_id>/edit', methods=['GET', 'POST'])
 def editItem(category_id, item_id):
@@ -322,7 +348,7 @@ def editItem(category_id, item_id):
         session.commit()
         return redirect(url_for('showCategory', category_id=category_id))
     else:
-        return render_template('edititem.html', item=item)
+        return render_template('edititem.html', item=item, login_session=login_session)
 
 @app.route('/item/<int:category_id>/<int:item_id>/delete', methods=['GET', 'POST'])
 def deleteItem(category_id, item_id):
@@ -334,7 +360,7 @@ def deleteItem(category_id, item_id):
         session.commit()
         return redirect(url_for('showCategory', category_id=category_id))
     else:
-        return render_template('deleteitem.html', item=item)
+        return render_template('deleteitem.html', item=item, login_session=login_session)
 
 
 if __name__ == '__main__':
