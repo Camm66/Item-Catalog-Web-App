@@ -7,6 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Category, CatalogItem, User
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
+from werkzeug.utils import secure_filename
 import json
 import os
 import random
@@ -42,10 +43,14 @@ def csrf_protect():#
 #            abort(400)
     return
 
+def csrf_token():
+    return
+
 def generate_csrf_token():
-    if 'csrf_token' not in session:
-        session['csrf_token'] = some_random_string()
-    return session['csrf_token']
+    #if 'csrf_token' not in session:
+    #    session['csrf_token'] = some_random_string()
+    #return session['csrf_token']
+    return
 
 app.jinja_env.globals['csrf_token'] = generate_csrf_token
 
@@ -289,7 +294,8 @@ def showCategory(category_id):
 def addCategory():
     if request.method == 'POST':
         if request.form['name']:
-            newCategory = Category(name=request.form['name'])
+            user_id = getUserID(login_session['email'])
+            newCategory = Category(name=request.form['name'], user_id=user_id)
             session.add(newCategory)
             flash('New Category %s Successfully Created' % newCategory.name)
             session.commit()
@@ -333,8 +339,9 @@ def addItem(category_id):
     if request.method =='POST':
         if request.form['name']:
             filename = upload_file(request)
+            user_id = getUserID(login_session['email'])
             newItem = CatalogItem(name=request.form['name'],
-                description=request.form['description'], category_id=category.id, picture=filename)
+                description=request.form['description'], category_id=category.id, picture=filename, user_id=user_id)
             session.add(newItem)
             flash('Item %s Successfully Created' % newItem.name)
             session.commit()
