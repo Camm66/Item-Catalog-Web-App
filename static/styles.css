@@ -36,3 +36,8 @@ a {
  color: #0093B9;
  line-height: 17px;
 }
+
+.header{
+	border-radius: 10px;
+	background-color: #A8EEFF;
+}
