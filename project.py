@@ -24,7 +24,7 @@ APPLICATION_NAME = "ItemCatalogWebDB"
 
 #Initialize the database
 
-engine = create_engine('sqlite:///catalog.db')
+engine = create_engine('sqlite:///catalog.db?check_same_thread=False')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
@@ -253,6 +253,9 @@ def disconnect():
 @app.route('/home')
 def showHome():
     categories = session.query(Category).order_by(asc(Category.name))
+
+    session.close()
+
     if 'username' not in login_session:
         return render_template('publichomepage.html', categories=categories, login_session=login_session)
     return render_template("homepage.html", categories=categories, login_session=login_session)
@@ -261,6 +264,9 @@ def showHome():
 def showCategory(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
     items = session.query(CatalogItem).filter_by(category_id=category_id).all()
+
+    session.close()
+
     if 'username' not in login_session:
         return render_template('publiccategorypage.html', category=category, items=items, login_session=login_session)
     return render_template("categorypage.html", category=category, items=items, login_session=login_session)
@@ -305,6 +311,9 @@ def deleteCategory(category_id):
 def showItem(item_id):
     categories = session.query(Category).order_by(asc(Category.name))
     item = session.query(CatalogItem).filter_by(id=item_id).one()
+
+    session.close()
+
     if 'username' not in login_session:
         return render_template('publicitempage.html', item=item, categories=categories, login_session=login_session)
     return render_template('itempage.html', item=item, categories=categories, login_session=login_session)
