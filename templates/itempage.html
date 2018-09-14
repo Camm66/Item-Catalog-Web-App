@@ -1,8 +1,8 @@
 {% extends "main.html" %}
 {% block content %}
 {% include "header.html" %}
-    <div>
-      <h2>{{item.name}}</h2>
+{% include "directory.html" %}
+    <h2>{{item.name}}</h2>
       <div class = 'flash'>
       		      {% with messages = get_flashed_messages() %}
             {% if messages %}
@@ -19,10 +19,8 @@
       <a href="{{url_for('editItem', category_id=item.category_id, item_id=item.id)}}">Edit</a>
       <a href="{{url_for('deleteItem', category_id=item.category_id, item_id=item.id)}}">Delete</a>
       {% endif %}
-    </br>
-      <img src="{{ url_for('get_file', filename=item.picture) }}" width=200 height=200>
-    </div>
-    <div>
+  <div class="item">
+      <img class="image" src="{{ url_for('get_file', filename=item.picture) }}" width=200 height=200>
       <p>{{item.description}}</p>
     </div>
 {% endblock %}

@@ -31,7 +31,6 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 #Added CSRF protection
-
 #csrf = CSRFProtect()
 #csrf.init_app(app)
 
@@ -42,17 +41,16 @@ def csrf_protect():#
 #        if not token or token != request.form.get('csrf_token'):
 #            abort(400)
     return
-
 def csrf_token():
     return
 
 def generate_csrf_token():
-    #if 'csrf_token' not in session:
-    #    session['csrf_token'] = some_random_string()
-    #return session['csrf_token']
+#    if 'csrf_token' not in session:
+#        session['csrf_token'] = some_random_string()
+#    return session['csrf_token']
     return
 
-app.jinja_env.globals['csrf_token'] = generate_csrf_token
+#app.jinja_env.globals['csrf_token'] = generate_csrf_token
 
 
 #Image handling
@@ -328,10 +326,11 @@ def deleteCategory(category_id):
 
 @app.route('/item/<int:item_id>')
 def showItem(item_id):
+    categories = session.query(Category).order_by(asc(Category.name))
     item = session.query(CatalogItem).filter_by(id=item_id).one()
     if 'username' not in login_session:
-        return render_template('publicitempage.html', item=item, login_session=login_session)
-    return render_template('itempage.html', item=item, login_session=login_session)
+        return render_template('publicitempage.html', item=item, categories=categories, login_session=login_session)
+    return render_template('itempage.html', item=item, categories=categories, login_session=login_session)
 
 @app.route('/item/<int:category_id>/addItem', methods=['GET', 'POST'])
 def addItem(category_id):

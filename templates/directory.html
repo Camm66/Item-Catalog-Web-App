@@ -1,0 +1,11 @@
+<div class="directory">
+  <h2>Categories</h2>
+<ul>
+{% for category in categories %}
+  <li>
+    <a id="optionCat" href = "{{url_for('showCategory', category_id = category.id)}}">
+          {{category.name}}</a>
+  </li>
+{% endfor %}
+</ul>
+</div>

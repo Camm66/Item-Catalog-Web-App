@@ -5,6 +5,7 @@
 		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
   </head>
   <body>
+    <div class="header">
     <h1>Catalog Site</h1>
     <button type="button" class="btn btn-default btn-sm">
       <a href="{{url_for("showHome")}}">
@@ -12,7 +13,7 @@
       </a>
     </button>
 
-    <div class="col-md-6 text-right">
+    <div class="btn btn-default">
         {% if 'username' in login_session %}
         <a href="{{url_for('gdisconnect')}}">Logout </a>
         {% else %}
@@ -20,5 +21,6 @@
         {% endif %}
 
     </div>
+  </div>
   </body>
 </html>
