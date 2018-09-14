@@ -18,7 +18,7 @@
       <ul>
       {% for category in categories %}
         <li>
-          <a href = "{{url_for('showCategory', category_id = category.id)}}">
+          <a id="optionCat" href = "{{url_for('showCategory', category_id = category.id)}}">
                 {{category.name}}</a>
         </li>
       {% endfor %}

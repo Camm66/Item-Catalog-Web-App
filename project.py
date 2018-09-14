@@ -30,29 +30,6 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-#Added CSRF protection
-#csrf = CSRFProtect()
-#csrf.init_app(app)
-
-@app.before_request
-def csrf_protect():#
-#    if request.method == "POST":
-#        token = session.pop('csrf_token')
-#        if not token or token != request.form.get('csrf_token'):
-#            abort(400)
-    return
-def csrf_token():
-    return
-
-def generate_csrf_token():
-#    if 'csrf_token' not in session:
-#        session['csrf_token'] = some_random_string()
-#    return session['csrf_token']
-    return
-
-#app.jinja_env.globals['csrf_token'] = generate_csrf_token
-
-
 #Image handling
 UPLOAD_FOLDER = '/vagrant/ItemCatalog/images'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])

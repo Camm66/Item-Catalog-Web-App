@@ -5,7 +5,6 @@
     <div>
       	<form action="#" method = "post">
           <div class="form-group">
-            <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
             <button id="submit" type="submit">
             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>Delete</button>
             <button type="reset" onclick="window.location='{{url_for('showItem', item_id=item.id)}}';return false;">
