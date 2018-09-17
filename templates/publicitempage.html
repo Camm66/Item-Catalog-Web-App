@@ -2,6 +2,7 @@
 {% block content %}
 {% include "header.html" %}
 {% include "directory.html" %}
+  <div class="item">
     <h2>{{item.name}}</h2>
       <div class = 'flash'>
       		      {% with messages = get_flashed_messages() %}
@@ -15,7 +16,6 @@
               {% endif %}
           {% endwith %}
       </div>
-  <div class="item">
       <img class="image" src="{{ url_for('get_file', filename=item.picture) }}" width=200 height=200>
       <p>{{item.description}}</p>
     </div>

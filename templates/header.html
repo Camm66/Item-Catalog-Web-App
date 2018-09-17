@@ -6,21 +6,18 @@
   </head>
   <body>
     <div class="header">
-    <h1>Catalog Site</h1>
-    <button type="button" class="btn btn-default btn-sm">
-      <a href="{{url_for("showHome")}}">
-          <span class="glyphicon glyphicon-home"></span> Home
-      </a>
-    </button>
+      <h1>Catalog Site</h1>
+      <button type="button" class="btn btn-default btn-sm" onclick="window.location='{{url_for("showHome")}}'">
+        <span class="glyphicon glyphicon-home"></span> Home</button>
 
-    <div class="btn btn-default">
-        {% if 'username' in login_session %}
-        <a href="{{url_for('gdisconnect')}}">Logout </a>
-        {% else %}
-        <a href="{{url_for('showLogin')}}">Click Here to Login </a>
-        {% endif %}
+    {% if 'username' in login_session %}
+      <button type="button" class="btn btn-default btn-sm" onclick="window.location='{{url_for('gdisconnect')}}'">
+        <span></span>Logout</button>
+    {% else %}
+      <button type="button" class="btn btn-default btn-sm" onclick="window.location='{{url_for('showLogin')}}'">
+        <span></span>Click Here to Login</button>
+    {% endif %}
 
     </div>
-  </div>
   </body>
 </html>

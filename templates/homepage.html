@@ -1,7 +1,7 @@
 {% extends "main.html" %}
 {% block content %}
 {% include "header.html" %}
-    <div>
+    <div class="homepage">
       <h2>Categories</h2>
       <div class = 'flash'>
       		      {% with messages = get_flashed_messages() %}
@@ -14,8 +14,8 @@
               </ul>
               {% endif %}
           {% endwith %}
-                  <a id="option" href="{{url_for('addCategory')}}"> New Category </a>
       </div>
+      <a id="option" href="{{url_for('addCategory')}}"> New Category </a>
       <ul>
       {% for category in categories %}
         <li>
