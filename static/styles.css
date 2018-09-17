@@ -60,6 +60,13 @@ div.item p{
 	margin-left: 25%;
 }
 
+div.categories{
+
+}
+div.categories a{
+	margin-left: 25%
+}
+
 #signinButton{
 	margin-left: auto;
 	margin-right: auto;

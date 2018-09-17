@@ -15,10 +15,8 @@
               {% endif %}
           {% endwith %}
       </div>
-      {% if item.user_id == login_session['user_id'] %}
       <a href="{{url_for('editItem', category_id=item.category_id, item_id=item.id)}}">Edit</a>
       <a href="{{url_for('deleteItem', category_id=item.category_id, item_id=item.id)}}">Delete</a>
-      {% endif %}
   <div class="item">
       <img class="image" src="{{ url_for('get_file', filename=item.picture) }}" width=200 height=200>
       <p>{{item.description}}</p>

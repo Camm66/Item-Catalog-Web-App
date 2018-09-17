@@ -1,7 +1,7 @@
 {% extends "main.html" %}
 {% block content %}
 {% include "header.html" %}
-    <div>
+{% include "directory.html" %}
       <h2>{{category.name}}</h2>
       <div class = 'flash'>
       		      {% with messages = get_flashed_messages() %}
@@ -15,6 +15,7 @@
               {% endif %}
           {% endwith %}
       </div>
+      <div class = "categories">
       {% for item in items %}
     </br>
         <a href="{{url_for('showItem', item_id=item.id)}}">{{item.name}}</a>

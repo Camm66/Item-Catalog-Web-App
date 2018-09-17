@@ -263,13 +263,14 @@ def showHome():
 @app.route('/category/<int:category_id>')
 def showCategory(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
+    categories = session.query(Category).all()
     items = session.query(CatalogItem).filter_by(category_id=category_id).all()
 
     session.close()
 
     if 'username' not in login_session:
-        return render_template('publiccategorypage.html', category=category, items=items, login_session=login_session)
-    return render_template("categorypage.html", category=category, items=items, login_session=login_session)
+        return render_template('publiccategorypage.html', categories=categories, category=category, items=items, login_session=login_session)
+    return render_template("categorypage.html", categories=categories, category=category, items=items, login_session=login_session)
 
 @app.route('/addCategory', methods=['GET', 'POST'])
 def addCategory():

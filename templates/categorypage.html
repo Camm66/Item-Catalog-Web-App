@@ -1,7 +1,7 @@
 {% extends "main.html" %}
 {% block content %}
 {% include "header.html" %}
-    <div>
+{% include "directory.html" %}
       <h2>{{category.name}}</h2>
       <div class = 'flash'>
       		      {% with messages = get_flashed_messages() %}
@@ -15,11 +15,10 @@
               {% endif %}
           {% endwith %}
       </div>
+    <div class = "categories">
       <a href="{{url_for('addItem', category_id=category.id)}}">Add Item</a>
-      {% if category.user_id == login_session['user_id'] %}
       <a href="{{url_for('editCategory', category_id=category.id)}}">Edit</a>
       <a href="{{url_for('deleteCategory', category_id=category.id)}}">Delete</a>
-      {% endif %}
       {% for item in items %}
     </br>
         <a href="{{url_for('showItem', item_id=item.id)}}">{{item.name}}</a>
