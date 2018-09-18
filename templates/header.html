@@ -11,7 +11,7 @@
         <span class="glyphicon glyphicon-home"></span> Home</button>
 
     {% if 'username' in login_session %}
-      <button type="button" class="btn btn-default btn-sm" onclick="window.location='{{url_for('gdisconnect')}}'">
+      <button type="button" class="btn btn-default btn-sm" onclick="window.location='{{url_for('disconnect')}}'">
         <span></span>Logout</button>
     {% else %}
       <button type="button" class="btn btn-default btn-sm" onclick="window.location='{{url_for('showLogin')}}'">
