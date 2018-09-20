@@ -1,41 +1,59 @@
 <html>
-<head>
+  <head>
+    <meta name="google-signin-client_id" content="1097068147402-9jh2lo9l79dhmrqk6vj5vlt94j0rj3cs.apps.googleusercontent.com">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+    </script>
+    <script src="//apis.google.com/js/platform.js?onload=start">
+    </script>
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+  </head>
 
-  <!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
- </script>
-
-<script src="//apis.google.com/js/platform.js?onload=start"> </script>
-
-<!-- END PRE-REQUISITES FOR GOOGLE SIGN IN -->
 
 
-</head>
+  <script type="text/javascript">
+  (function() {
+    var po = document.createElement('script');
+    po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/client:plusone.js?onload=render';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(po, s);
+  })();
+
+  function render() {
+    gapi.signin.render('googleButton', {
+      'scope': 'openid email',
+      'clientid': '1097068147402-9jh2lo9l79dhmrqk6vj5vlt94j0rj3cs.apps.googleusercontent.com',
+      'redirecturi': 'postmessage',
+      'accesstype': 'offline',
+      'cookiepolicy': 'single_host_origin',
+      'callback': 'signinCallback',
+      'approvalprompt': 'force'
+    });
+  }</script>
 
 <body>
+    <span class="signinButton">
+      <button id=googleButton class="loginBtn loginBtn--google">
+        Login with Google </button>
 
-<!-- GOOGLE PLUS SIGN IN-->
+
+      <fb:login-button class="fbButton" length="long" size="large"
+          scope="public_profile,email" onlogin="sendTokenToServer();">
+        <a href='javascript:sendTokenToServer()'>Login with Facebook</a>
+      </fb:login-button>
 
 
-          <div id="signinButton">
-          <span class="g-signin"
-            data-scope="openid email"
-            data-clientid="1097068147402-9jh2lo9l79dhmrqk6vj5vlt94j0rj3cs.apps.googleusercontent.com"
-            data-redirecturi="postmessage"
-            data-accesstype="offline"
-            data-cookiepolicy="single_host_origin"
-            data-callback="signInCallback"
-            data-approvalprompt="force">
-          </span>
-        </div>
+    </span>
 
-<div id="result"></div>
+    <div class="cnlContainer" style="background-color:#f1f1f1">
+       <button type="button" onclick="window.location='{{url_for('showHome')}}'" class="cancelbtn">Cancel</button>
+     </div>
 
 <script>
 function signInCallback(authResult) {
   if (authResult['code']) {
     // Hide the sign-in button now that the user is authorized
-    $('#signinButton').attr('style', 'display: none');
+    $('#googleButton').attr('style', 'display: none');
     // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
     $.ajax({
       type: 'POST',
@@ -110,18 +128,5 @@ function signInCallback(authResult) {
     });
   }
 </script>
-
-
-<button>
-
-
-<fb:login-button scope="public_profile,email" onlogin="sendTokenToServer();">
-<a href='javascript:sendTokenToServer()'>Login with Facebook</a>
-
-</fb:login-button>
-
-
-        </button>
-
-</body>
+  </body>
 </html>
