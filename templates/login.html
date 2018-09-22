@@ -27,6 +27,7 @@
       </fb:login-button>
 </br>
 </br>
+</br>
     <div class="cnlContainer" style="background-color:#f1f1f1">
        <button type="button" onclick="window.location='{{url_for('showHome')}}'" class="cancelbtn">Cancel</button>
      </div>
@@ -60,7 +61,7 @@
 function signInCallback(authResult) {
   if (authResult['code']) {
     // Hide the sign-in button now that the user is authorized
-    $('.loginContainer').attr('style', 'display: none');
+    $('.loginWindow').attr('style', 'display: none');
     // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
     $.ajax({
       type: 'POST',

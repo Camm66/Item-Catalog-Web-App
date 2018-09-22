@@ -41,6 +41,14 @@ a {
  margin-right: 5px;
 }
 
+button {
+	cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
 .flash{
 	color: #FFFFFF;
 	float: right;
@@ -73,16 +81,10 @@ a {
 	grid-row: 2;
 }
 
-div.directory{
+.directory{
 	grid-column: 1;
 	grid-row: 2;
 }
-
-
-button:hover {
-    opacity: 0.8;
-}
-
 
 div.item{
 	border-left-style: solid;
@@ -93,19 +95,23 @@ div.item{
 	padding-bottom: 50px;
 }
 
-
 div.categories img{
 	float:left;
 	grid-column: 1;
 	margin-right: 20px;
 }
 
-
 .loginWindow{
 	border-top: 2px solid #000000;
-	border-bottom: 2px solid #000000;
 	border-radius: 4px;
 	background-color: #252523;
+	margin-left: 15%;
+	margin-right: 15%
+}
+
+.cancelbtn {
+    padding: 10px 18px;
+		width: 100%;
 }
 
 /*Center the login page*/
@@ -121,13 +127,6 @@ div.categories img{
 	width: 800px;
 	margin: 0 auto;
 }
-
-
-.cancelbtn {
-    padding: 10px 18px;
-    background-color: #FFFFFF;
-}
-
 
 /*google button styles*/
 .loginBtn {
