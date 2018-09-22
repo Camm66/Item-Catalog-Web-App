@@ -6,55 +6,74 @@
 h1 {
 	font-family: "Helvetica Neue Light", Roboto, Helvetica, Arial, sans-serif;
 	font-size: 50px;
-	color: #000000;
+	color: #FFFFFF;
 	line-height: 60px;
 	font-weight: 300;
+	text-align: center;
 }
 
 h2 {
 	font-size: 24px;
-	color: #000000;
+	color: #FFFFFF;
 	line-height: 29px;
 }
 
 h3 {
 	font-size: 18px;
-	color: #000000;
+	color: #FFFFFF;
 	line-height: 23px;
 }
 
 p {
  font-family: "Helvetica Neue", Roboto, Helvetica, Arial, sans-serif;
  font-size: 16px;
- color: #7B7573;
+ color: #FFFFFF;
  line-height: 24px;
  font-weight: 400;
 }
 
 a {
  font-size: 14px;
- color: #0093B9;
+ color: #dfd8c8;
  line-height: 17px;
 }
+
+.container{
+	border: 2px solid #000000;
+	border-radius: 4px;
+	background-color: #a39274;
+	display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: 25% auto 20%;
+}
+
+.header{
+	position: relative;
+	background-color: #252523;
+	grid-column: 1/3;
+	grid-row: 1;
+}
+
+.categories{
+	border-left-style: solid;
+	border-color: #000000;
+	border-width: 2px;
+	padding-left: 20px;
+	padding-bottom: 50px;
+	grid-column: 2;
+	grid-row: 2;
+}
+
+div.directory{
+	grid-column: 1;
+	grid-row: 2;
+}
+
 
 button:hover {
     opacity: 0.8;
 }
 
-.cancelbtn {
-    padding: 10px 18px;
-    background-color: #FFFFFF;
-}
-
-.header{
-	border-radius: 10px;
-	background-color: #A8EEFF;
-}
-
-div.directory{
-	width:200px;
-	float:left;
-}
 
 div.item{
 	border-left-style: solid;
@@ -66,50 +85,53 @@ div.item{
 }
 
 
-div.item img{
+div.categories img{
 	float:left;
 	grid-column: 1;
 }
 
-div.item p{
-	grid-column: 2;
+
+.loginWindow{
+	border-top: 2px solid #000000;
+	border-bottom: 2px solid #000000;
+	border-radius: 4px;
+	background-color: #252523;
 }
 
-div.categories{
-	border-left-style: solid;
-	border-color: #000000;
-	border-width: 2px;
-	display: grid;
-	padding-left: 20px;
-	padding-bottom: 50px;
-}
-
-div.container{
+/*Center the login page*/
+.loginContainer{
+	text-align: center;
 	border: 2px solid #000000;
+	border-radius: 4px;
+	background-color: #a39274;
 }
 
-.homepage{
-	padding-bottom: 50px;
+#page-wrap {
+	text-align: left;
+	width: 800px;
+	margin: 0 auto;
 }
 
-div.signinButton{
+
+.cancelbtn {
+    padding: 10px 18px;
+    background-color: #FFFFFF;
 }
 
 
-
-/* Shared */
+/*google button styles*/
 .loginBtn {
   box-sizing: border-box;
   position: relative;
-  /* width: 13em;  - apply for fixed size */
-  margin: 0.2em;
-  padding: 0 15px 0 46px;
+  width: 14em;
+  margin: 0.1em;
+  padding: 0 15px 0 40px;
   border: none;
   text-align: left;
-  line-height: 34px;
+  line-height: 29px;
   white-space: nowrap;
   border-radius: 0.2em;
-  font-size: 16px;
+  font-size: 12px;
   color: #FFF;
 }
 .loginBtn:before {
@@ -136,7 +158,7 @@ div.signinButton{
 }
 .loginBtn--google:before {
   border-right: #BB3F30 1px solid;
-  background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_google.png') 6px 6px no-repeat;
+  background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/icon_google.png') 3px 3px no-repeat;
 }
 .loginBtn--google:hover,
 .loginBtn--google:focus {

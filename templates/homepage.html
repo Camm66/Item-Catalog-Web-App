@@ -1,6 +1,7 @@
 {% extends "main.html" %}
 {% block content %}
-    <div class="homepage">
+{% include "latestitems.html" %}
+    <div class="directory">
       <h2>Categories</h2>
       <div class = 'flash'>
       		      {% with messages = get_flashed_messages() %}
