@@ -3,18 +3,7 @@
 {% include "directory.html" %}
   <div class="categories">
     <h2>{{item.name}}</h2>
-      <div class = 'flash'>
-      		      {% with messages = get_flashed_messages() %}
-            {% if messages %}
-
-              <ul>
-              {% for message in messages %}
-                  <li> <strong> {{ message }} </strong> </li>
-              {% endfor %}
-              </ul>
-              {% endif %}
-          {% endwith %}
-      </div>
+  </br>
       <img class="image" src="{{ url_for('get_file', filename=item.picture) }}" width=200 height=200>
       <p>{{item.description}}</p>
     </div>

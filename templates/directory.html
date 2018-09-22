@@ -1,5 +1,8 @@
 <div class="directory">
   <h2>Categories</h2>
+  {% if 'username' in login_session %}
+  <a href="{{url_for('addCategory')}}"> Add Category </a>
+  {% endif %}
 <ul>
 {% for category in categories %}
   <li>

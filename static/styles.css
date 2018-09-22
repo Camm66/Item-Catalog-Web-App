@@ -16,6 +16,8 @@ h2 {
 	font-size: 24px;
 	color: #FFFFFF;
 	line-height: 29px;
+	margin-right: 15px;
+	display: inline-block;
 }
 
 h3 {
@@ -36,6 +38,12 @@ a {
  font-size: 14px;
  color: #dfd8c8;
  line-height: 17px;
+ margin-right: 5px;
+}
+
+.flash{
+	color: #FFFFFF;
+	float: right;
 }
 
 .container{
@@ -88,6 +96,7 @@ div.item{
 div.categories img{
 	float:left;
 	grid-column: 1;
+	margin-right: 20px;
 }
 
 

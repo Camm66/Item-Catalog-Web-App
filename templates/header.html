@@ -6,6 +6,7 @@
   </head>
     <div class="header">
       <h1>Catalog Site</h1>
+      <span>
       <button type="button" class="btn btn-default btn-sm" onclick="window.location='{{url_for("showHome")}}'">
         <span class="glyphicon glyphicon-home"></span> Home</button>
 
@@ -16,6 +17,17 @@
       <button id="login" type="button" class="btn btn-default btn-sm" onclick="window.location='{{url_for('showLogin')}}'">
         <span class="glyphicon glyphicon-user"></span> Click Here to Login</button>
     {% endif %}
+
+    <span class = 'flash'>
+              {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <p> * {{ message }} * </p> 
+            {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </span>
+  </span>
 
     </div>
 </html>

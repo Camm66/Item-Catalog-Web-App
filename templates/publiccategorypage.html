@@ -3,19 +3,8 @@
 {% include "directory.html" %}
     <div class = "categories">
       <h2>{{category.name}}</h2>
-      <div class = 'flash'>
-      		      {% with messages = get_flashed_messages() %}
-            {% if messages %}
-
-              <ul>
-              {% for message in messages %}
-                  <li> <strong> {{ message }} </strong> </li>
-              {% endfor %}
-              </ul>
-              {% endif %}
-          {% endwith %}
-      </div>
         {% for item in items %}
+      </br>
           <a href="{{url_for('showItem', item_id=item.id)}}">{{item.name}}</a>
         {% endfor %}
     </div>

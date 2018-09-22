@@ -3,18 +3,6 @@
 {% include "latestitems.html" %}
     <div class="directory">
       <h2>Categories</h2>
-      <div class = 'flash'>
-      		      {% with messages = get_flashed_messages() %}
-            {% if messages %}
-
-              <ul>
-              {% for message in messages %}
-                  <li> <strong> {{ message }} </strong> </li>
-              {% endfor %}
-              </ul>
-              {% endif %}
-          {% endwith %}
-      </div>
       <ul>
       {% for category in categories %}
         <li>
