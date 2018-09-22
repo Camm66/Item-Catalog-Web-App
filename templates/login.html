@@ -10,7 +10,31 @@
 
 
 
-  <script type="text/javascript">
+<body class='loginPage container'>
+    <h1>Catalog Site</h1>
+  <div id='#page-wrap'>
+    <div id="result"></div>
+    <div class="loginContainer">
+    <h2>Login</h2>
+    <p>Connect with:</p>
+      <button id='googleButton' class="loginBtn loginBtn--google">
+        Login with Google </button>
+</br>
+    <p>OR</p>
+      <fb:login-button id="fbButton" length="long" size="large"
+          scope="public_profile,email" onlogin="sendTokenToServer();">
+        <a href='javascript:sendTokenToServer()'>Login with Facebook</a>
+      </fb:login-button>
+</br>
+</br>
+    <div class="cnlContainer" style="background-color:#f1f1f1">
+       <button type="button" onclick="window.location='{{url_for('showHome')}}'" class="cancelbtn">Cancel</button>
+     </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
   (function() {
     var po = document.createElement('script');
     po.type = 'text/javascript'; po.async = true;
@@ -26,34 +50,17 @@
       'redirecturi': 'postmessage',
       'accesstype': 'offline',
       'cookiepolicy': 'single_host_origin',
-      'callback': 'signinCallback',
+      'callback': 'signInCallback',
       'approvalprompt': 'force'
     });
-  }</script>
-
-<body>
-    <span class="signinButton">
-      <button id=googleButton class="loginBtn loginBtn--google">
-        Login with Google </button>
-
-
-      <fb:login-button class="fbButton" length="long" size="large"
-          scope="public_profile,email" onlogin="sendTokenToServer();">
-        <a href='javascript:sendTokenToServer()'>Login with Facebook</a>
-      </fb:login-button>
-
-
-    </span>
-
-    <div class="cnlContainer" style="background-color:#f1f1f1">
-       <button type="button" onclick="window.location='{{url_for('showHome')}}'" class="cancelbtn">Cancel</button>
-     </div>
+  }
+</script>
 
 <script>
 function signInCallback(authResult) {
   if (authResult['code']) {
     // Hide the sign-in button now that the user is authorized
-    $('#googleButton').attr('style', 'display: none');
+    $('.loginContainer').attr('style', 'display: none');
     // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
     $.ajax({
       type: 'POST',
@@ -64,7 +71,7 @@ function signInCallback(authResult) {
       success: function(result) {
         // Handle or verify the server response if necessary.
         if (result) {
-          $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
+          $('#result').html(result + '</br>Redirecting...')
          setTimeout(function() {
           window.location.href = "/home";
          }, 4000);
@@ -105,6 +112,7 @@ function signInCallback(authResult) {
     console.log('Welcome!  Fetching your information.... ');
     FB.api('/me', function(response) {
       console.log('Successful login for: ' + response.name);
+      $('.loginContainer').attr('style', 'display: none');
      $.ajax({
       type: 'POST',
       url: '/fbconnect?state={{STATE}}',

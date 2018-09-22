@@ -4,7 +4,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
   </head>
-  <body>
     <div class="header">
       <h1>Catalog Site</h1>
       <button type="button" class="btn btn-default btn-sm" onclick="window.location='{{url_for("showHome")}}'">
@@ -12,12 +11,11 @@
 
     {% if 'username' in login_session %}
       <button type="button" class="btn btn-default btn-sm" onclick="window.location='{{url_for('disconnect')}}'">
-        <span></span>Logout</button>
+        <span class="glyphicon glyphicon-user"></span> Logout</button>
     {% else %}
-      <button type="button" class="btn btn-default btn-sm" onclick="window.location='{{url_for('showLogin')}}'">
-        <span></span>Click Here to Login</button>
+      <button id="login" type="button" class="btn btn-default btn-sm" onclick="window.location='{{url_for('showLogin')}}'">
+        <span class="glyphicon glyphicon-user"></span> Click Here to Login</button>
     {% endif %}
 
     </div>
-  </body>
 </html>
