@@ -9,7 +9,9 @@
       </span>
     </br>
     </br>
+    {% if item.picture %}
       <img class="image" src="{{ url_for('get_file', filename=item.picture) }}" width=200 height=200>
+    {% endif %}
       <p>{{item.description}}</p>
   </div>
 {% endblock %}
