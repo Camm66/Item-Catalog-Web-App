@@ -310,10 +310,8 @@ def showHome():
 @app.route('/category/<int:category_id>')
 def showCategory(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
-    categories = session.query(Category).all()
+    categories = session.query(Category).order_by(asc(Category.name))
     items = session.query(CatalogItem).filter_by(category_id=category_id).all()
-    if 'username' not in login_session:
-        return render_template('publiccategorypage.html', categories=categories, category=category, items=items, login_session=login_session)
     return render_template("categorypage.html", categories=categories, category=category, items=items, login_session=login_session)
 
 @app.route('/addCategory', methods=['GET', 'POST'])
@@ -356,8 +354,6 @@ def deleteCategory(category_id):
 def showItem(item_id):
     categories = session.query(Category).order_by(asc(Category.name))
     item = session.query(CatalogItem).filter_by(id=item_id).one()
-    if 'username' not in login_session:
-        return render_template('publicitempage.html', item=item, categories=categories, login_session=login_session)
     return render_template('itempage.html', item=item, categories=categories, login_session=login_session)
 
 @app.route('/item/<int:category_id>/addItem', methods=['GET', 'POST'])

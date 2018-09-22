@@ -4,10 +4,12 @@
     <div class = "categories">
       <h2>{{category.name}}</h2>
       <span>
-        <a href="{{url_for('addItem', category_id=category.id)}}">Add Item</a>
-        {% if login_session['user_id'] == category.user_id %}
-        <a href="{{url_for('editCategory', category_id=category.id)}}">Edit</a>
-        <a href="{{url_for('deleteCategory', category_id=category.id)}}">Delete</a>
+        {% if 'username' in login_session %}
+          <a href="{{url_for('addItem', category_id=category.id)}}">Add Item</a>
+          {% if login_session['user_id'] == category.user_id %}
+            <a href="{{url_for('editCategory', category_id=category.id)}}">Edit</a>
+            <a href="{{url_for('deleteCategory', category_id=category.id)}}">Delete</a>
+          {% endif %}
         {% endif %}
       </span>
         {% for item in items %}

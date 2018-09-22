@@ -3,11 +3,11 @@
 {% include "directory.html" %}
   <div class="categories">
     <h2>{{item.name}}</h2>
-    {% if login_session['user_id'] == item.user_id %}
-      <span>
+    {% if 'username' in login_session %}
+      {% if login_session['user_id'] == item.user_id %}
         <a href="{{url_for('editItem', category_id=item.category_id, item_id=item.id)}}">Edit</a>
         <a href="{{url_for('deleteItem', category_id=item.category_id, item_id=item.id)}}">Delete</a>
-      </span>
+      {% endif %}
     {% endif %}
     </br>
     </br>
