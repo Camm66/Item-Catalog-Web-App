@@ -49,7 +49,7 @@ Run the application with the following command:
 * `python project.py`
 
 The application is set by default to run at port 5000 from your local machine.
-This may be altered by changing the designated port on line 414 of the `project.py` file.
+This may be altered by changing the designated port on _line 414_ of the `project.py` file.
 
 In your browser navigate to the following; `http://localhost:5000/home`
 
