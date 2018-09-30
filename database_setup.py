@@ -4,7 +4,6 @@ from sqlalchemy import Column, ForeignKey, Integer, String, BLOB
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
-from sqlalchemy_imageattach.entity import Image, image_attachment
 
 Base = declarative_base()
 
@@ -17,6 +16,7 @@ class User(Base):
     email = Column(String(150), nullable=False)
     picture = Column(String(250))
 
+
 class Category(Base):
     __tablename__ = 'catalog'
 
@@ -24,6 +24,7 @@ class Category(Base):
     name = Column(String(250), nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
+    items = relationship('CatalogItem', cascade="all, delete-orphan")
 
     @property
     def serialize(self):

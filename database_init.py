@@ -34,37 +34,47 @@ session.add(category3)
 session.commit()
 
 catalogItem1 = CatalogItem(name="Calculus 1",
-    description="A math course about Calculus.", category=category1, picture="testImg1.jpg", user_id=1)
+                           description="A math course about Calculus.",
+                           category=category1, picture="testImg1.jpg",
+                           user_id=1)
 
 session.add(catalogItem1)
 session.commit()
 
 catalogItem2 = CatalogItem(name="Calculus 2",
-    description="A math course about Calculus, but tougher.", category=category1, picture="testImg2.jpg")
+                           description='''A math course about Calculus,
+                           but tougher.''', category=category1,
+                           picture="testImg2.jpg")
 
 session.add(catalogItem2)
 session.commit()
 
 catalogItem3 = CatalogItem(name="Ancient Greek Philosophy",
-    description="Socrates, Plato, Aristole; The list goes on...", category=category2, picture="testImg3.jpg")
+                           description='''Socrates, Plato, Aristole;
+                           The list goes on...''',
+                           category=category2, picture="testImg3.jpg")
 
 session.add(catalogItem3)
 session.commit()
 
 catalogItem4 = CatalogItem(name="Sartre and Philosophy of Mind",
-    description="This course will really get you thinking.", category=category2)
+                           description='''This course will really get
+                           you thinking.''', category=category2)
 
 session.add(catalogItem4)
 session.commit()
 
 catalogItem5 = CatalogItem(name="Database Technologies",
-    description="I hope you like tables, or not.", category=category3, picture="testImg4.jpg")
+                           description='''I hope you like tables, or not.''',
+                           category=category3, picture="testImg4.jpg")
 
 session.add(catalogItem5)
 session.commit()
 
 catalogItem6 = CatalogItem(name="Software Architecture",
-    description="Mind your components and beware of your dependencies.", category=category3, picture="testImg5.jpg")
+                           description='''Mind your components and beware
+                           of your dependencies.''',
+                           category=category3, picture="testImg5.jpg")
 
 session.add(catalogItem6)
 session.commit()
