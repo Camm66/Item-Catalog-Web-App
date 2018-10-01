@@ -102,7 +102,7 @@ div.categories img{
 }
 
 .loginWindow{
-	border-top: 2px solid #000000;
+	border-top: 2px solid #fff;
 	border-radius: 4px;
 	background-color: #252523;
 	margin-left: 15%;
@@ -115,18 +115,26 @@ div.categories img{
 }
 
 /*Center the login page*/
-.loginContainer{
-	text-align: center;
-	border: 2px solid #000000;
-	border-radius: 4px;
-	background-color: #a39274;
+.box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  padding: 40px;
+  background: rgba(0,0,0,.8);
+  box-sizing: border-box;
+  box-shadow: 0 15px 25px rgba(0,0,0,.5);
+  border-radius: 10px;
 }
 
-#page-wrap {
-	text-align: left;
-	width: 800px;
-	margin: 0 auto;
+#result{
+	position: relative;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
+
 
 /*google button styles*/
 .loginBtn {

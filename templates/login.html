@@ -10,12 +10,11 @@
 
 
 
-<body class='loginContainer'>
-  <div id='#page-wrap'>
-        <h1>Catalog Site</h1>
-    <div id="result"></div>
+<body class='container'>
+  <div id="result"></div>
+  <div class='box'>
+        <h2>Catalog Site Login</h2>
     <div class="loginWindow">
-    <h2>Login</h2>
     <p>Connect with:</p>
       <button id='googleButton' class="loginBtn loginBtn--google">
         Login with Google </button>
@@ -61,7 +60,7 @@
 function signInCallback(authResult) {
   if (authResult['code']) {
     // Hide the sign-in button now that the user is authorized
-    $('.loginWindow').attr('style', 'display: none');
+    $('.box').attr('style', 'display: none');
     // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
     $.ajax({
       type: 'POST',
