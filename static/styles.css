@@ -56,8 +56,6 @@ button:hover {
 }
 
 .container{
-	border: 2px solid #000000;
-	border-radius: 4px;
 	background-color: #a39274;
 	display: grid;
   grid-template-columns: auto auto;
@@ -103,8 +101,6 @@ div.categories img{
 
 .loginWindow{
 	border-top: 2px solid #fff;
-	border-radius: 4px;
-	background-color: #252523;
 	margin-left: 15%;
 	margin-right: 15%
 }
@@ -126,6 +122,7 @@ div.categories img{
   box-sizing: border-box;
   box-shadow: 0 15px 25px rgba(0,0,0,.5);
   border-radius: 10px;
+	text-align: center;
 }
 
 #result{

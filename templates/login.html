@@ -112,7 +112,7 @@ function signInCallback(authResult) {
     console.log('Welcome!  Fetching your information.... ');
     FB.api('/me', function(response) {
       console.log('Successful login for: ' + response.name);
-      $('.loginContainer').attr('style', 'display: none');
+      $('.box').attr('style', 'display: none');
      $.ajax({
       type: 'POST',
       url: '/fbconnect?state={{STATE}}',

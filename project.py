@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
-from flask import flash, send_from_directory
+from flask import (Flask, render_template, request,
+                   redirect, url_for, jsonify,
+                   flash, send_from_directory)
 from flask import session as login_session
 from flask import make_response
 from flask_wtf.csrf import CSRFProtect
@@ -79,7 +80,7 @@ def categoryJSON(category_id):
 
 @app.route('/item/<int:item_id>/JSON')
 def itemJSON(item_id):
-    Item = session.query(CatalogItem).filter_by(id=item_id).one()
+    Item = session.query(CatalogItem).filter_by(id=item_id).one_or_none()
     return jsonify(Item=[Item.serialize])
 
 
@@ -319,23 +320,21 @@ def createUser(login_session):
                    'email'], picture=login_session['picture'])
     session.add(newUser)
     session.commit()
-    user = session.query(User).filter_by(email=login_session['email']).one()
+    user = session.query(User).filter_by(email=
+           login_session['email']).one_or_none()
     return user.id
 
 
 # Retrieve a user enter from the User table
 def getUserInfo(user_id):
-    user = session.query(User).filter_by(id=user_id).one()
+    user = session.query(User).filter_by(id=user_id).one_or_none()
     return user
 
 
 # Retrieve a user id from the User table
 def getUserID(email):
-    try:
-        user = session.query(User).filter_by(email=email).one()
-        return user.id
-    except Exception:
-        return None
+    user = session.query(User).filter_by(email=email).one_or_none()
+    return user.id
 
 
 # Method calls for each page:
@@ -360,7 +359,7 @@ def showHome():
 
 @app.route('/category/<int:category_id>')
 def showCategory(category_id):
-    category = session.query(Category).filter_by(id=category_id).one()
+    category = session.query(Category).filter_by(id=category_id).one_or_none()
     categories = session.query(Category).order_by(asc(Category.name))
     items = session.query(CatalogItem).filter_by(category_id=category_id).all()
     return render_template("categorypage.html", categories=categories,
@@ -386,7 +385,8 @@ def addCategory():
 @app.route('/category/<int:category_id>/edit', methods=['GET', 'POST'])
 @login_required
 def editCategory(category_id):
-    editedCategory = session.query(Category).filter_by(id=category_id).one()
+    editedCategory = session.query(Category).filter_by(id=
+                     category_id).one_or_none()
     if editedCategory.user_id != login_session['user_id']:
         flash("You don't have permission to edit that item!")
         return redirect(url_for("showHome"))
@@ -405,7 +405,8 @@ def editCategory(category_id):
 @app.route('/category/<int:category_id>/delete', methods=['GET', 'POST'])
 @login_required
 def deleteCategory(category_id):
-    deletedCategory = session.query(Category).filter_by(id=category_id).one()
+    deletedCategory = session.query(Category).filter_by(id=
+                      category_id).one_or_none()
     if deletedCategory.user_id != login_session['user_id']:
         flash("You don't have permission to delete that item!")
         return redirect(url_for("showHome"))
@@ -421,7 +422,7 @@ def deleteCategory(category_id):
 @app.route('/item/<int:item_id>')
 def showItem(item_id):
     categories = session.query(Category).order_by(asc(Category.name))
-    item = session.query(CatalogItem).filter_by(id=item_id).one()
+    item = session.query(CatalogItem).filter_by(id=item_id).one_or_none()
     return render_template('itempage.html', item=item, categories=categories,
                            login_session=login_session)
 
@@ -429,7 +430,7 @@ def showItem(item_id):
 @app.route('/item/<int:category_id>/addItem', methods=['GET', 'POST'])
 @login_required
 def addItem(category_id):
-    category = session.query(Category).filter_by(id=category_id).one()
+    category = session.query(Category).filter_by(id=category_id).one_or_none()
     if request.method == 'POST':
         if request.form['name']:
             user_id = getUserID(login_session['email'])
@@ -455,7 +456,7 @@ def addItem(category_id):
            methods=['GET', 'POST'])
 @login_required
 def editItem(category_id, item_id):
-    item = session.query(CatalogItem).filter_by(id=item_id).one()
+    item = session.query(CatalogItem).filter_by(id=item_id).one_or_none()
     if item.user_id != login_session['user_id']:
         flash("You don't have permission to edit that item!")
         return redirect(url_for("showHome"))
@@ -469,7 +470,7 @@ def editItem(category_id, item_id):
         session.commit()
         return redirect(url_for('showCategory', category_id=category_id))
     else:
-        return render_template('edititem.html', item=item,
+        return render_template('edititem.html', category_id=category_id, item=item,
                                login_session=login_session)
 
 
@@ -477,7 +478,7 @@ def editItem(category_id, item_id):
            methods=['GET', 'POST'])
 @login_required
 def deleteItem(category_id, item_id):
-    item = session.query(CatalogItem).filter_by(id=item_id).one()
+    item = session.query(CatalogItem).filter_by(id=item_id).one_or_none()
     if item.user_id != login_session['user_id']:
         flash("You don't have permission to delete that item!")
         return redirect(url_for("showHome"))
@@ -489,7 +490,7 @@ def deleteItem(category_id, item_id):
         session.commit()
         return redirect(url_for('showCategory', category_id=category_id))
     else:
-        return render_template('deleteitem.html', item=item,
+        return render_template('deleteitem.html', category_id=category_id, item=item,
                                login_session=login_session)
 
 
