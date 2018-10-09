@@ -41,7 +41,7 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
-# Check that only an image file of the specified format was submitted
+# Image handling helper functions
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -95,7 +95,7 @@ def showLogin():
     return render_template('login.html', STATE=state)
 
 
-# Decorator function used to check for authorization
+# Decorator function used to check for authorization before page access
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -109,6 +109,15 @@ def login_required(f):
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
+    '''
+    Method: login a user via the google+ oauth api
+    Args:
+        arg1(login_session): global login_session object
+        arg2(state_token): anti-forgery state token created in showLogin method
+    Returns:
+        return login_session object populated with user information returned
+        from the google server
+    '''
     # Validate state token
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
@@ -197,6 +206,15 @@ def gconnect():
 
 @app.route('/fbconnect', methods=['POST'])
 def fbconnect():
+    '''
+    Method: login a user via the facebook oauth api
+    Args:
+        arg1(login_session): global login_session object
+        arg2(state_token): anti-forgery state token created in showLogin method
+    Returns:
+        return login_session object populated with user information returned
+        from the facebook server
+    '''
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
@@ -260,6 +278,12 @@ def fbconnect():
 # DISCONNECT - Revoke a current user's token and reset their login_session
 @app.route('/gdisconnect')
 def gdisconnect():
+    '''
+    Method: call google+ api to revoke the access_token
+    Args:
+        arg1(login_session): global login_session object
+        arg2(access_token): stored in login_session['access_token']
+    '''
     access_token = login_session.get('access_token')
     if access_token is None:
         response = make_response(
@@ -281,6 +305,12 @@ def gdisconnect():
 
 @app.route('/fbdisconnect')
 def fbdisconnect():
+    '''
+    Method: call facebook api to revoke the access_token
+    Args:
+        arg1(login_session): global login_session object
+        arg2(access_token): stored in login_session['access_token']
+    '''
     facebook_id = login_session['facebook_id']
     access_token = login_session['access_token']
     url = '''https://graph.facebook.com/%s/permissions?
@@ -293,6 +323,14 @@ def fbdisconnect():
 # Disconnect based on Oauth provider
 @app.route('/disconnect')
 def disconnect():
+    '''
+    Method: clear user information from current login_session
+    Args:
+        arg1(login_session), global login_session object
+    Returns:
+        1) Calls disconnect method for the provider (google, facebook)
+        2) Redirect to the showHome method
+    '''
     if 'provider' in login_session:
         if login_session['provider'] == 'google':
             gdisconnect()
@@ -320,8 +358,8 @@ def createUser(login_session):
                    'email'], picture=login_session['picture'])
     session.add(newUser)
     session.commit()
-    user = session.query(User).filter_by(email=
-           login_session['email']).one_or_none()
+    user = session.query(User)
+    .filter_by(email=login_session['email']).one_or_none()
     return user.id
 
 
@@ -338,19 +376,16 @@ def getUserID(email):
 
 
 # Method calls for each page:
-'''
-Each route provides 0-2 url parameters consisting of:
-Args:
-    Category.category_id
-    CatalogItem.item_id
-These allow us to perform the necessary CRUD operations
-and to display the results on the requesite HTML page.
-'''
-
-
 @app.route('/')
 @app.route('/home')
 def showHome():
+    '''
+    Method: Render the home page with all Categories and latest 8 CatalogItems
+    Args:
+        args: None
+    Returns:
+        return rendered homepage.html
+    '''
     categories = session.query(Category).order_by(asc(Category.name))
     items = session.query(CatalogItem).order_by(CatalogItem.id.desc()).limit(8)
     return render_template("homepage.html", categories=categories,
@@ -359,6 +394,13 @@ def showHome():
 
 @app.route('/category/<int:category_id>')
 def showCategory(category_id):
+    '''
+    Method: Show all nested CatalogItems in a selected Category
+    Args:
+        arg1(int): category_id, unique id for the selected Category
+    Returns:
+        return rendered categorypage.html page with all related items
+    '''
     category = session.query(Category).filter_by(id=category_id).one_or_none()
     categories = session.query(Category).order_by(asc(Category.name))
     items = session.query(CatalogItem).filter_by(category_id=category_id).all()
@@ -370,6 +412,16 @@ def showCategory(category_id):
 @app.route('/addCategory', methods=['GET', 'POST'])
 @login_required
 def addCategory():
+    '''
+    Method: add a Category to the database
+    Args:
+        args: none
+    Returns:
+        for GET:
+            Render addcategory.html page
+        for POST:
+            Add the category and redirect to showHome method
+    '''
     if request.method == 'POST':
         if request.form['name']:
             user_id = getUserID(login_session['email'])
@@ -385,8 +437,18 @@ def addCategory():
 @app.route('/category/<int:category_id>/edit', methods=['GET', 'POST'])
 @login_required
 def editCategory(category_id):
-    editedCategory = session.query(Category).filter_by(id=
-                     category_id).one_or_none()
+    '''
+    Method: edit a Category in the database
+    Args:
+        arg1(int): category_id, unique id for the selected category
+    Returns:
+        for GET:
+            Render editcategory.html page
+        for POST:
+            Edit the Category and redirect to the showCategory method
+    '''
+    editedCategory = session.query(Category)
+    .filter_by(id=category_id).one_or_none()
     if editedCategory.user_id != login_session['user_id']:
         flash("You don't have permission to edit that item!")
         return redirect(url_for("showHome"))
@@ -405,8 +467,18 @@ def editCategory(category_id):
 @app.route('/category/<int:category_id>/delete', methods=['GET', 'POST'])
 @login_required
 def deleteCategory(category_id):
-    deletedCategory = session.query(Category).filter_by(id=
-                      category_id).one_or_none()
+    '''
+    Method: delete a Category from the database
+    Args:
+        arg1(int): category_id, unique id for the selected category
+    Returns:
+        for GET:
+            Render deletecategory.html page
+        for POST:
+            Delete the Category and redirect to showHome method
+    '''
+    deletedCategory = session.query(Category)
+    .filter_by(id=category_id).one_or_none()
     if deletedCategory.user_id != login_session['user_id']:
         flash("You don't have permission to delete that item!")
         return redirect(url_for("showHome"))
@@ -421,6 +493,13 @@ def deleteCategory(category_id):
 
 @app.route('/item/<int:item_id>')
 def showItem(item_id):
+    '''
+    Method: render the page for a selected CatalogItem
+    Args:
+        arg1(int): item_id, unique item id
+    Returns:
+        return itempage.html populated with the CatalogItem information
+    '''
     categories = session.query(Category).order_by(asc(Category.name))
     item = session.query(CatalogItem).filter_by(id=item_id).one_or_none()
     return render_template('itempage.html', item=item, categories=categories,
@@ -430,6 +509,16 @@ def showItem(item_id):
 @app.route('/item/<int:category_id>/addItem', methods=['GET', 'POST'])
 @login_required
 def addItem(category_id):
+    '''
+    Method: add a CatalogItem in the database
+    Args:
+        arg1(int): category_id, parent category for the new item
+    Returns:
+        for GET:
+            Renders HTML template for the additem.html page
+        for POST:
+            Adds item to database and redirects to showCategory method
+    '''
     category = session.query(Category).filter_by(id=category_id).one_or_none()
     if request.method == 'POST':
         if request.form['name']:
@@ -456,6 +545,17 @@ def addItem(category_id):
            methods=['GET', 'POST'])
 @login_required
 def editItem(category_id, item_id):
+    '''
+    Method: edit a CatalogItem in the database
+    Args:
+        arg1(int): category_id, parent category for the item
+        arg2(int): item_id, unique item id
+    Returns:
+        for GET:
+            Renders HTML template for the edititem.html page
+        for POST:
+            Edits item in database and redirect to showCategory method
+    '''
     item = session.query(CatalogItem).filter_by(id=item_id).one_or_none()
     if item.user_id != login_session['user_id']:
         flash("You don't have permission to edit that item!")
@@ -470,14 +570,25 @@ def editItem(category_id, item_id):
         session.commit()
         return redirect(url_for('showCategory', category_id=category_id))
     else:
-        return render_template('edititem.html', category_id=category_id, item=item,
-                               login_session=login_session)
+        return render_template('edititem.html', category_id=category_id,
+                               item=item, login_session=login_session)
 
 
 @app.route('/item/<int:category_id>/<int:item_id>/delete',
            methods=['GET', 'POST'])
 @login_required
 def deleteItem(category_id, item_id):
+    '''
+    Method: delete a CatalogItem from database
+    Args:
+        arg1(int): category_id, parent category for the item
+        arg2(int): item_id, unique item id
+    Returns:
+        for GET:
+            Renders HTML template for the deleteitem.html page
+        for POST:
+            Removes item and redirects to showHome method
+    '''
     item = session.query(CatalogItem).filter_by(id=item_id).one_or_none()
     if item.user_id != login_session['user_id']:
         flash("You don't have permission to delete that item!")
@@ -490,8 +601,8 @@ def deleteItem(category_id, item_id):
         session.commit()
         return redirect(url_for('showCategory', category_id=category_id))
     else:
-        return render_template('deleteitem.html', category_id=category_id, item=item,
-                               login_session=login_session)
+        return render_template('deleteitem.html', category_id=category_id,
+                               item=item, login_session=login_session)
 
 
 if __name__ == '__main__':
