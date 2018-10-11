@@ -36,9 +36,10 @@ session = DBSession()
 
 # Image handling storage location
 UPLOAD_FOLDER = '/vagrant/ItemCatalog/images'
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024 # Max file == 2 Megabytes
 
 
 # Image handling helper functions
@@ -358,8 +359,8 @@ def createUser(login_session):
                    'email'], picture=login_session['picture'])
     session.add(newUser)
     session.commit()
-    user = session.query(User)
-    .filter_by(email=login_session['email']).one_or_none()
+    user = session.query(User).filter_by(
+           email=login_session['email']).one_or_none()
     return user.id
 
 
@@ -447,8 +448,8 @@ def editCategory(category_id):
         for POST:
             Edit the Category and redirect to the showCategory method
     '''
-    editedCategory = session.query(Category)
-    .filter_by(id=category_id).one_or_none()
+    editedCategory = session.query(Category).filter_by(
+                     id=category_id).one_or_none()
     if editedCategory.user_id != login_session['user_id']:
         flash("You don't have permission to edit that item!")
         return redirect(url_for("showHome"))
@@ -477,8 +478,8 @@ def deleteCategory(category_id):
         for POST:
             Delete the Category and redirect to showHome method
     '''
-    deletedCategory = session.query(Category)
-    .filter_by(id=category_id).one_or_none()
+    deletedCategory = session.query(Category).filter_by(
+                      id=category_id).one_or_none()
     if deletedCategory.user_id != login_session['user_id']:
         flash("You don't have permission to delete that item!")
         return redirect(url_for("showHome"))
