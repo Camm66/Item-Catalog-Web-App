@@ -22,12 +22,12 @@ import requests
 app = Flask(__name__)
 
 CLIENT_ID = json.loads(
-    open('client_secrets.json', 'r').read())['web']['client_id']
+    open('/var/www/catalog/catalog/client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "ItemCatalogWebDB"
 
 
 # Initialize the database
-engine = create_engine('sqlite:///catalog.db?check_same_thread=False')
+engine = create_engine('postgresql://catalog:secretpassword@localhost/catalog')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
@@ -35,7 +35,7 @@ session = DBSession()
 
 
 # Image handling storage location
-UPLOAD_FOLDER = '/vagrant/ItemCatalog/images'
+UPLOAD_FOLDER = '/var/www/catalog/catalog/images/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -129,7 +129,7 @@ def gconnect():
 
     try:
         # Upgrade the authorization code into a credentials object
-        oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
+        oauth_flow = flow_from_clientsecrets('/var/www/catalog/catalog/client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
@@ -223,10 +223,10 @@ def fbconnect():
     access_token = request.data
     print "access token received %s " % access_token
 
-    app_id = json.loads(open('fb_client_secrets.json', 'r').read())[
+    app_id = json.loads(open('/var/www/catalog/catalog/fb_client_secrets.json', 'r').read())[
         'web']['app_id']
     app_secret = json.loads(
-        open('fb_client_secrets.json', 'r').read())['web']['app_secret']
+        open('/var/www/catalog/catalog/fb_client_secrets.json', 'r').read())['web']['app_secret']
     url = (('https://graph.facebook.com/oauth/access_token?grant_type='
             'fb_exchange_token&client_id=%s&client_secret=%s&'
             'fb_exchange_token=%s')
@@ -373,7 +373,10 @@ def getUserInfo(user_id):
 # Retrieve a user id from the User table
 def getUserID(email):
     user = session.query(User).filter_by(email=email).one_or_none()
-    return user.id
+    if(user):
+    	return user.id
+    else: 
+	return None
 
 
 # Method calls for each page:
@@ -609,4 +612,5 @@ def deleteItem(category_id, item_id):
 if __name__ == '__main__':
     app.secret_key = 'secretkey'
     app.debug = True
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=80)
+    
