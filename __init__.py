@@ -187,10 +187,10 @@ def gconnect():
     login_session['email'] = data['email']
     login_session['provider'] = 'google'
 
-    user_id = getUserID(data["email"])
-    if not user_id:
-        user_id = createUser(login_session)
-    login_session['user_id'] = user_id
+    user = getUser(data["email"])
+    if not user:
+        user = createUser(login_session)
+    login_session['user_id'] = user.id
 
     output = ''
     output += '<h1>Welcome, '
@@ -257,10 +257,10 @@ def fbconnect():
 
     login_session['picture'] = data["data"]["url"]
 
-    user_id = getUserID(login_session['email'])
-    if not user_id:
-        user_id = createUser(login_session)
-    login_session['user_id'] = user_id
+    user = getUser(login_session['email'])
+    if not user:
+        user = createUser(login_session)
+    login_session['user_id'] = user.id
 
     output = ''
     output += '<h1>Welcome, '
@@ -370,12 +370,17 @@ def getUserInfo(user_id):
     return user
 
 
+# Retrieve a user from the User table
+def getUser(email):
+    user = session.query(User).filter_by(email=email).one_or_none()
+    return user
+
 # Retrieve a user id from the User table
 def getUserID(email):
     user = session.query(User).filter_by(email=email).one_or_none()
     if(user):
     	return user.id
-    else: 
+    else:
 	return None
 
 
@@ -613,4 +618,3 @@ if __name__ == '__main__':
     app.secret_key = 'secretkey'
     app.debug = True
     app.run(host='0.0.0.0', port=80)
-    

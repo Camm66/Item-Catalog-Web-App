@@ -1,33 +1,32 @@
 <!DOCTYPE html>
 <html lang = "en">
-  <head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
-  </head>
-    <div class="header">
-      <h1>Catalog Site</h1>
-      <span>
-      <button type="button" class="btn btn-default btn-sm" onclick="window.location='{{url_for("showHome")}}'">
-        <span class="glyphicon glyphicon-home"></span> Home</button>
+  <div class="header">
+    <h1>Catalog Site</h1>
+  </div>
+    <div class="navBar">
+    <ul>
+      <li>
+        <a class="glyphicon glyphicon-home" onclick="window.location='{{url_for("showHome")}}'"> Home</a>
+      </li>
 
-    {% if 'username' in login_session %}
-      <button type="button" class="btn btn-default btn-sm" onclick="window.location='{{url_for('disconnect')}}'">
-        <span class="glyphicon glyphicon-user"></span> Logout</button>
-    {% else %}
-      <button id="login" type="button" class="btn btn-default btn-sm" onclick="window.location='{{url_for('showLogin')}}'">
-        <span class="glyphicon glyphicon-user"></span> Click Here to Login</button>
-    {% endif %}
+      <li style="float: right">
+      {% if 'username' in login_session %}
+        <a class="glyphicon glyphicon-user" onclick="window.location='{{url_for('disconnect')}}'"> Logout</a>
+      {% else %}
+        <a class="glyphicon glyphicon-user" onclick="window.location='{{url_for('showLogin')}}'"> Login</a>
+      {% endif %}
+      </li>
 
-    <span class = 'flash'>
-              {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            {% for message in messages %}
-              <p> * {{ message }} * </p> 
-            {% endfor %}
+      <span class = 'flash'>
+         {% with messages = get_flashed_messages() %}
+            {% if messages %}
+              {% for message in messages %}
+                <li> * {{ message }} * </li>
+              {% endfor %}
             {% endif %}
-        {% endwith %}
-    </span>
-  </span>
+          {% endwith %}
+      </span>
+    </ul>
 
     </div>
 </html>

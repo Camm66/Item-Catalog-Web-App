@@ -65,7 +65,8 @@ session.add(catalogItem4)
 session.commit()
 
 catalogItem5 = CatalogItem(name="Database Technologies",
-                           description='''I hope you like tables, or not.''',
+                           description='''A course about tables and all
+                           that jazz.''',
                            category=category3, picture="testImg4.jpg")
 
 session.add(catalogItem5)
