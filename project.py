@@ -35,7 +35,7 @@ session = DBSession()
 
 
 # Image handling storage location
-UPLOAD_FOLDER = '/vagrant/ItemCatalog/images'
+UPLOAD_FOLDER = '/vagrant/Item-Catalog-Web-App/images'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -187,10 +187,10 @@ def gconnect():
     login_session['email'] = data['email']
     login_session['provider'] = 'google'
 
-    user_id = getUserID(data["email"])
-    if not user_id:
-        user_id = createUser(login_session)
-    login_session['user_id'] = user_id
+    user = getUser(data["email"])
+    if not user:
+        user = createUser(login_session)
+    login_session['user_id'] = user.id
 
     output = ''
     output += '<h1>Welcome, '
@@ -257,10 +257,10 @@ def fbconnect():
 
     login_session['picture'] = data["data"]["url"]
 
-    user_id = getUserID(login_session['email'])
-    if not user_id:
-        user_id = createUser(login_session)
-    login_session['user_id'] = user_id
+    user = getUser(login_session['email'])
+    if not user:
+        user = createUser(login_session)
+    login_session['user_id'] = user.id
 
     output = ''
     output += '<h1>Welcome, '
@@ -361,7 +361,7 @@ def createUser(login_session):
     session.commit()
     user = session.query(User).filter_by(
            email=login_session['email']).one_or_none()
-    return user.id
+    return user
 
 
 # Retrieve a user enter from the User table
@@ -369,6 +369,11 @@ def getUserInfo(user_id):
     user = session.query(User).filter_by(id=user_id).one_or_none()
     return user
 
+
+# Retrieve a user from the User table
+def getUser(email):
+    user = session.query(User).filter_by(email=email).one_or_none()
+    return user
 
 # Retrieve a user id from the User table
 def getUserID(email):
@@ -524,7 +529,7 @@ def addItem(category_id):
     if request.method == 'POST':
         if request.form['name']:
             user_id = getUserID(login_session['email'])
-            if(request.form['pic']):
+            if(request.files):
                 filename = upload_file(request)
                 newItem = CatalogItem(name=request.form['name'],
                                       description=request.form['description'],
