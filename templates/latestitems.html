@@ -1,16 +1,18 @@
 <div class="categories">
   <h2>Latest Items</h2>
-</br>
-  {% for item in items %}
-  <span>
-    <a id="optionCat" href = "{{url_for('showItem', item_id=item.id)}}">
-            {{item.name}}</a>
-  {% for category in categories %}
-    {% if item.category_id == category.id %}
-      ({{category.name}})
-    {% endif %}
-  {% endfor %}
-  </span>
-    </br>
-  {% endfor %}
+  <ol>
+    {% for item in items %}
+    <li>
+      <a id="optionCat" href = "{{url_for('showItem', item_id=item.id)}}">
+              {{item.name}}</a>
+      <div class="item-category">
+    {% for category in categories %}
+      {% if item.category_id == category.id %}
+        ({{category.name}})
+      {% endif %}
+    {% endfor %}
+      </div>
+    </li>
+    {% endfor %}
+  </ol>
 </div>

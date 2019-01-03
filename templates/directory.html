@@ -4,9 +4,11 @@
   <a href="{{url_for('addCategory')}}"> Add Category </a>
   {% endif %}
   <br>
+  <ol>
 {% for category in categories %}
-    <a id="optionCat" href = "{{url_for('showCategory', category_id = category.id)}}">
+    <li><a id="optionCat" href = "{{url_for('showCategory', category_id = category.id)}}">
           {{category.name}}</a>
-    <br>
+    </li>
 {% endfor %}
+  <ol>
 </div>
