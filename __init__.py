@@ -190,7 +190,7 @@ def gconnect():
     user = getUser(data["email"])
     if not user:
         user = createUser(login_session)
-    login_session['user_id'] = user
+    login_session['user_id'] = user.id
 
     output = ''
     output += '<h1>Welcome, '
@@ -361,7 +361,7 @@ def createUser(login_session):
     session.commit()
     user = session.query(User).filter_by(
            email=login_session['email']).one_or_none()
-    return user.id
+    return user
 
 
 # Retrieve a user enter from the User table
