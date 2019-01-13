@@ -1,6 +1,6 @@
 <html>
   <head>
-    <meta name="google-signin-client_id" content="374212637635-cd3tvjdf6q1ef2qj8dknijnp0fd7u1kg.apps.googleusercontent.com">
+    <meta name="google-signin-client_id" content="1097068147402-9jh2lo9l79dhmrqk6vj5vlt94j0rj3cs.apps.googleusercontent.com">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
     </script>
     <script src="//apis.google.com/js/platform.js?onload=start">
@@ -15,21 +15,28 @@
   <div class='box'>
         <h2>Catalog Site Login</h2>
     <div class="loginWindow">
-    <p>Connect with:</p>
-      <button id='googleButton' class="loginBtn loginBtn--google">
-        Login with Google </button>
-</br>
-    <p>OR</p>
-      <fb:login-button id="fbButton" length="long" size="large"
-          scope="public_profile,email" onlogin="sendTokenToServer();">
-        <a href='javascript:sendTokenToServer()'>Login with Facebook</a>
-      </fb:login-button>
-</br>
-</br>
-</br>
-    <div class="cnlContainer" style="background-color:#f1f1f1">
-       <button type="button" onclick="window.location='{{url_for('showHome')}}'" class="cancelbtn">Cancel</button>
-     </div>
+      <form>
+        <div class="inputBox">
+          <input type="text" name="username" required>
+          <label>Username</label>
+        </div>
+        <div class="inputBox">
+          <input type="password" name="password" required>
+          <label>Password</label>
+        </div>
+        <input type="submit" name="cancel" value="Submit">
+        <input type="reset" name="cancel" value="Cancel" onclick="window.location='{{url_for('showHome')}}'">
+      </form>
+      <br>
+      <div class="altLogin">
+        <p>Or connect with:</p>
+          <button id='googleButton' class="altbuttons loginBtn loginBtn--google">
+            Login with Google </button>
+          <!-- <fb:login-button id="fbButton" class="altbuttons loginBtn--facebook" length="long" size="large"
+              scope="public_profile,email" onlogin="sendTokenToServer();">
+            <a href='javascript:sendTokenToServer()'>Login with Facebook</a>
+          </fb:login-button> -->
+      <div>
   </div>
 </div>
 
@@ -46,7 +53,7 @@
   function render() {
     gapi.signin.render('googleButton', {
       'scope': 'openid email',
-      'clientid': '374212637635-cd3tvjdf6q1ef2qj8dknijnp0fd7u1kg.apps.googleusercontent.com',
+      'clientid': '1097068147402-9jh2lo9l79dhmrqk6vj5vlt94j0rj3cs.apps.googleusercontent.com',
       'redirecturi': 'postmessage',
       'accesstype': 'offline',
       'cookiepolicy': 'single_host_origin',
