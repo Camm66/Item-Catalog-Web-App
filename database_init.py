@@ -44,7 +44,7 @@ session.commit()
 catalogItem2 = CatalogItem(name="Calculus 2",
                            description='''A math course about Calculus,
                            but tougher.''', category=category1,
-                           picture="testImg2.jpg")
+                           picture="/var/www/catalog/catalog/images/testImg2.jpg")
 
 session.add(catalogItem2)
 session.commit()
@@ -52,7 +52,7 @@ session.commit()
 catalogItem3 = CatalogItem(name="Ancient Greek Philosophy",
                            description='''Socrates, Plato, Aristole;
                            The list goes on...''',
-                           category=category2, picture="testImg3.jpg")
+                           category=category2, picture="/var/www/catalog/catalog/images/testImg3.jpg")
 
 session.add(catalogItem3)
 session.commit()
@@ -67,7 +67,7 @@ session.commit()
 catalogItem5 = CatalogItem(name="Database Technologies",
                            description='''A course about tables and all
                            that jazz.''',
-                           category=category3, picture="testImg4.jpg")
+                           category=category3, picture="/var/www/catalog/catalog/images/testImg4.jpg")
 
 session.add(catalogItem5)
 session.commit()
@@ -75,7 +75,7 @@ session.commit()
 catalogItem6 = CatalogItem(name="Software Architecture",
                            description='''Mind your components and beware
                            of your dependencies.''',
-                           category=category3, picture="testImg5.jpg")
+                           category=category3, picture="/var/www/catalog/catalog/images/testImg5.jpg")
 
 session.add(catalogItem6)
 session.commit()
