@@ -53,5 +53,8 @@ This may be altered by changing the designated port on _line 414_ of the `projec
 
 In your browser navigate to the following; `http://localhost:5000/home`
 
+## Instructions to deploy this program:
+Click [here](https://github.com/Camm66/ItemCatalogServer) for instructions on how to deploy this application to a linux server using Amazon Web Services.
+
 ## License
 License information is available in the LICENSE.txt file.
